@@ -12,45 +12,16 @@ function Game(width, height){
 	this.scene = new THREE.Scene();
 
 	var loader = new THREE.JSONLoader();
-	
-	loader.load("/models/editable-person.js", function(geo) {
-		var mesh = new THREE.Mesh(geo, new THREE.MeshPhongMaterial({color : 0xffffff, wireframe: false}));
-		mesh.scale.set( 1, 1, 1);
-
-		mesh.position.y = 3;
-		mesh.position.x = 0;
-
-		mesh.castShadow = true;
-		mesh.receiveShadow = true;
-
-		that.char = mesh;
-
-		that.scene.add(mesh);
-	});
+		
 	var resourceManager = new ResourceManager();
-	resourceManager.load({Hero : "models/editable-person.js"});
+	resourceManager.load({Hero : "models/editable-person.js"}, function(){
+		
+		that.hero = new Hero(that.camera);
+		that.hero.addTo(that.scene);
+	});
 	
 	this.map = new Map();
 	this.map.addMeshTo(this.scene);
-	
-	var pointLight = new THREE.PointLight(0xafafaf);
-
-	// set its position
-	pointLight.position.x = 10;
-	pointLight.position.y = 50;
-	pointLight.position.z = 130;
-
-	//add to the scene
-	//this.scene.add(pointLight);
-
-	var pointLight2 = new THREE.PointLight(0xffffff);
-	pointLight2.position.x = 20;
-	pointLight2.position.y = 20;
-	pointLight2.position.z = 20;
-
-	//this.scene.add(pointLight2);
-
-	addSunlight(this.scene);
 
 	if (Game.testWebGL()) {
 		this.renderer = new THREE.WebGLRenderer();
@@ -80,20 +51,16 @@ function Game(width, height){
 		that.char.position.y -= dt;
 	}, true);
 	this.keyBinder.bindKey("A", function(dt){
-		that.camera.position.x -= dt * 100;
-		that.char.position.x -= dt * 100;
+		that.hero.left(dt);
 	}, true); 
 	this.keyBinder.bindKey("D", function(dt){
-		that.camera.position.x += dt * 100;
-		that.char.position.x += dt * 100;
+		that.hero.right(dt);
 	}, true);
 	this.keyBinder.bindKey("W", function(dt){
-		that.camera.position.z -= dt * 100;
-		that.char.position.z -= dt * 100;
+		that.hero.up(dt);
 	}, true);
 	this.keyBinder.bindKey("S", function(dt){
-		that.camera.position.z += dt * 100;
-		that.char.position.z += dt * 100;
+		that.hero.down(dt);
 	}, true);
 	
 	this.clock = new THREE.Clock(true);
@@ -104,7 +71,8 @@ Game.prototype.loop = function(){
 
 	this.keyBinder.check(dt);
 	this.move(dt);
-	this.render(dt);
+	if(this.hero)
+		this.render(dt);
 
 	var that = this;
 	requestAnimationFrame(function(){that.loop()});
