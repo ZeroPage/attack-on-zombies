@@ -5,6 +5,8 @@
 		this.flashLight = new THREE.SpotLight();
 		this.flashLight.castShadow = true;
 		this.flashLight.shadowDarkness = 0.9;
+		this.flashLight.shadowCameraNear = 1;
+		this.flashLight.position.y = 3;
 
 		this.torch = new THREE.PointLight();
 		this.torch.position.y = 10;
@@ -49,6 +51,10 @@
 		this.flashLight.position.x += dt * this.stat.speed;
 		this.camera.position.x += dt * this.stat.speed;
 		this.torch.position.x += dt * this.stat.speed;
+	}
+	Hero.prototype.aimTo = function(x, y){
+		this.flashLight.target.position.x = x;
+		this.flashLight.target.position.z = y;
 	}
 	global.Hero = Hero;
 })(this);
