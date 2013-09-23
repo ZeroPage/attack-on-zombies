@@ -62,6 +62,8 @@ function Game(width, height){
 	this.keyBinder.bindKey("S", function(dt){
 		that.hero.down(dt);
 	}, true);
+	this.keyBinder.bindKey("MOUSEMOVE", function(dt){
+	}, true);
 	
 	this.clock = new THREE.Clock(true);
 	this.loop();
@@ -85,13 +87,4 @@ Game.prototype.move = function(dt){
 Game.testWebGL = function(){
 	var canvas = document.createElement("canvas");
 	return !!window.WebGLRenderingContext && !!(canvas.getContext("webgl") || canvas.getContext("moz-webgl"));
-}
-function addSunlight(scene) {
-	var sunlight = new THREE.SpotLight();
-	sunlight.position.set(100,100, 100);
-	sunlight.castShadow = true;
-	sunlight.shadowDarkness = 0.5;
-	//sunlight.shadowCameraVisible = true;
-	
-	scene.add(sunlight);
 }
