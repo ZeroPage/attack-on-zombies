@@ -37,6 +37,10 @@ function Game(width, height){
 
 	document.body.appendChild(this.renderer.domElement);
 
+	this.renderer.domElement.addEventListener("mousemove", function(e){
+		that.hero.aimTo(e.x - width/2, e.y - height/2)
+	});
+
 	this.keyBinder = new KeyBinder(document.body);
 	this.keyBinder.bindKey("LEFT", function(dt){
 		that.char.position.x -= dt;
