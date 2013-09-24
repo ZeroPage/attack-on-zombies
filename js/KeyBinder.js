@@ -21,7 +21,6 @@ function KeyBinder(element){
 }
 KeyBinder.prototype.onMouseMove = function(e){
 	this.pos = new Point(e.x - e.srcElement.offsetLeft, e.y - e.srcElement.offsetTop);
-	this.keymap["MOUSEMOVE"] && this.keymap["MOUSEMOVE"]();
 }
 KeyBinder.prototype.onKeyDown = function(e){
 	var key = this.translate(e);

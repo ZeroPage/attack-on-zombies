@@ -62,9 +62,7 @@ function Game(width, height){
 	this.keyBinder.bindKey("S", function(dt){
 		that.hero.down(dt);
 	}, true);
-	this.keyBinder.bindKey("MOUSEMOVE", function(dt){
-	}, true);
-	
+		
 	this.clock = new THREE.Clock(true);
 	this.loop();
 }
