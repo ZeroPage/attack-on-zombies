@@ -11,7 +11,6 @@
 		];
 	};
 	Map.prototype.addMeshTo = function(scene){
-		//tile
 		for(var i =0; i < this.data.length; i++){
 			for(var j = 0; j < this.data[i].length; j++){
 				if(this.data[i][j] != 2){
@@ -23,36 +22,11 @@
 					scene.add(mesh);
 
 				} else if(this.data[i][j] == 2) {
-					//wall
-					var wall;
-					if(this.data[i-1][j] != 2){
-						wall = makeWall("N");
+					var mesh = makeWalls();
+					mesh.position.z = 10 * i;
+					mesh.position.x = 10 * j;
 
-						wall.position.set(10*j, 0, 10*i);
-
-						scene.add(wall);
-					} 
-					if(this.data[i+1][j] != 2){
-						wall = makeWall("S");
-						
-						wall.position.set(10*j, 0, 10*i);
-
-						scene.add(wall);
-					}
-					if(this.data[i][j-1] != 2){
-						wall = makeWall("W");
-
-						wall.position.set(10*j, 0, 10*i);
-
-						scene.add(wall);
-					}
-					if(this.data[i][j+1] != 2){
-						wall = makeWall("E");
-
-						wall.position.set(10*j, 0, 10*i);
-
-						scene.add(wall);
-					}
+					scene.add(mesh);
 				}
 			}
 		}
@@ -105,6 +79,11 @@
 				break;
 		}
 	}
+	var __WALLS_MAT__;
+	function getConst_WALLS_MAT(){
+		if(__WALLS_MAT__) return  __WALLS_MAT__;
+		return __WALLS_MAT__ =  new THREE.Matrix4().makeTranslation(5, 5, 5);
+	}
 	function makeMesh(type){
 		var geometry = new THREE.PlaneGeometry(10, 10);
 		geometry.applyMatrix(getConst_FLOOR_MAT());
@@ -132,6 +111,19 @@
 		
 		var material = new THREE.MeshLambertMaterial({color : 0xffff00, wireframe : false});
 		
+		var mesh = new THREE.Mesh(geometry, material);
+
+		mesh.castShadow = true;
+		mesh.receiveShadow = true;
+
+		return mesh;
+	}
+	function makeWalls(){
+		var geometry = new THREE.CubeGeometry(10, 10, 10);
+		geometry.applyMatrix(getConst_WALLS_MAT());
+		
+		var material = new THREE.MeshLambertMaterial({color : 0xff0f00});
+
 		var mesh = new THREE.Mesh(geometry, material);
 
 		mesh.castShadow = true;
