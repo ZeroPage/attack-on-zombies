@@ -53,7 +53,7 @@
 		var material = new THREE.MeshPhongMaterial({
 			color : 0xafafaf,
 			wireframe : false, 
-			map : new THREE.ImageUtils.loadTexture("/resources/texture/wall.jpg")
+			map : new THREE.ImageUtils.loadTexture("/resources/texture/floor.png")
 		});
 		var mesh = new THREE.Mesh(geometry, material);
 
