@@ -36,29 +36,32 @@
 		this.flashLight.position.z -= dt * this.stat.speed;
 		this.camera.position.z -= dt * this.stat.speed;
 		this.torch.position.z -= dt * this.stat.speed;
+		this.flashLight.target.position.z -= dt * this.stat.speed;
 	}
 	Hero.prototype.down = function(dt){
 		this.model.position.z += dt * this.stat.speed;
 		this.flashLight.position.z += dt * this.stat.speed;
 		this.camera.position.z += dt * this.stat.speed;
 		this.torch.position.z += dt * this.stat.speed;
+		this.flashLight.target.position.z += dt * this.stat.speed;
 	}
 	Hero.prototype.left = function(dt){
 		this.model.position.x -= dt * this.stat.speed;
 		this.flashLight.position.x -= dt * this.stat.speed;
 		this.camera.position.x -= dt * this.stat.speed;
 		this.torch.position.x -= dt * this.stat.speed;
+		this.flashLight.target.position.x -= dt * this.stat.speed;
 	}
 	Hero.prototype.right = function(dt){
 		this.model.position.x += dt * this.stat.speed;
 		this.flashLight.position.x += dt * this.stat.speed;
 		this.camera.position.x += dt * this.stat.speed;
 		this.torch.position.x += dt * this.stat.speed;
+		this.flashLight.target.position.x += dt * this.stat.speed;
 	}
 	Hero.prototype.aimTo = function(x, y){
-		console.log(x + "," + y);
-		this.flashLight.target.position.x = x;
-		this.flashLight.target.position.z = y;
+		this.flashLight.target.position.x = this.model.position.x + x / 10;
+		this.flashLight.target.position.z = this.model.position.z + y / 10;
 	}
 	global.Hero = Hero;
 })(this);
