@@ -44,18 +44,7 @@ function Game(width, height){
 	});
 
 	this.keyBinder = new KeyBinder(document.body);
-	this.keyBinder.bindKey("LEFT", function(dt){
-		that.char.position.x -= dt;
-	}, true);
-	this.keyBinder.bindKey("RIGHT", function(dt){
-		that.char.position.x += dt;
-	}, true);
-	this.keyBinder.bindKey("UP", function(dt){
-		that.char.position.y += dt;
-	}, true);
-	this.keyBinder.bindKey("DOWN", function(dt){
-		that.char.position.y -= dt;
-	}, true);
+	
 	this.keyBinder.bindKey("A", function(dt){
 		that.hero.left(dt);
 	}, true); 
@@ -68,9 +57,15 @@ function Game(width, height){
 	this.keyBinder.bindKey("S", function(dt){
 		that.hero.down(dt);
 	}, true);
+	this.keyBinder.bindKey("I", function (dt) {
+		var $itemStyle = document.getElementById("item").style;
+		//if ($itemStyle.display) delete $itemStyle.display;
+		//else $itemStyle.display == "inherit";
+		$itemStyle.display = $itemStyle.display == "none" ? "inherit" : "none";
+	}, false);
 		
 	this.clock = new THREE.Clock(true);
-	this.loop();
+	requestAnimationFrame(function () { that.loop() });
 }
 Game.prototype.loop = function(){
 	var dt = this.clock.getDelta();
