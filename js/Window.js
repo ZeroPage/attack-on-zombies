@@ -40,6 +40,5 @@ Window.prototype.hide = function () {
 	this.element.style.display = "inherit"
 }
 Window.prototype.toggle = function () {
-	var $itemStyle = document.getElementById("item").style;
-	$itemStyle.display = $itemStyle.display == "none" ? "inherit" : "none";
+	this.element.style.display = this.element.style.display == "none" ? "inherit" : "none";
 }

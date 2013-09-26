@@ -62,6 +62,11 @@ function Game(width, height){
 	this.keyBinder.bindKey("I", function (dt) {
 		$itemWindow.toggle();
 	}, false);
+
+	var $statWindow = new Window("stats");
+	this.keyBinder.bindKey("P", function (dt) {
+		$statWindow.toggle();
+	}, false);
 		
 	this.clock = new THREE.Clock(true);
 	requestAnimationFrame(function () { that.loop() });
