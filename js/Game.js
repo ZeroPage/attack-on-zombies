@@ -40,7 +40,7 @@ function Game(width, height){
 	this.renderer.domElement.addEventListener("mousemove", function(e){
 		var x = e.x || e.clientX;
 		var y = e.y || e.clientY;
-		that.hero.aimTo(x - width/2, y - height/2)
+		that.hero.aimTo(x - width / 2, y - height / 2);
 	});
 
 	this.keyBinder = new KeyBinder(document.body);
@@ -57,11 +57,10 @@ function Game(width, height){
 	this.keyBinder.bindKey("S", function(dt){
 		that.hero.down(dt);
 	}, true);
+
+	var $itemWindow = new Window("item");
 	this.keyBinder.bindKey("I", function (dt) {
-		var $itemStyle = document.getElementById("item").style;
-		//if ($itemStyle.display) delete $itemStyle.display;
-		//else $itemStyle.display == "inherit";
-		$itemStyle.display = $itemStyle.display == "none" ? "inherit" : "none";
+		$itemWindow.toggle();
 	}, false);
 		
 	this.clock = new THREE.Clock(true);

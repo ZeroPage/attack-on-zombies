@@ -9,7 +9,8 @@
 			"/js/Map.js",
 			"/js/Controller.js",
 			"/js/Hero.js",
-			"/js/ResourceManager.js"
+			"/js/ResourceManager.js",
+			"/js/Window.js"
 		];
 		loadScripts(scripts, onReady);
 
