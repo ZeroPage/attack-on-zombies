@@ -30,3 +30,30 @@ body {
     width : 32px;
     height : 32px;
 }
+
+#bullet {
+    position : fixed;
+    right : 20px;
+    bottom : 20px;
+    text-shadow : 0px 0px 10px white;
+    font-size : 30px;
+    font-weight : bold;
+    color : #a0a0a0;
+    font-family : monospace;
+}
+#bullet figure {
+    display : inline-block;
+    vertical-align : sub;
+    margin : 0px;
+    width : 60px;
+    font-size : 20px;
+    text-align : center;
+}
+#bullet figure img {
+    height : 100px;
+    width : 23px;
+    margin : auto;
+    background-image : url("/resources/icons/bullet.png");
+    background-position-x : 43px;
+    background-size : cover;
+}
