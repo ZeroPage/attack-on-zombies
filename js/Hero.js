@@ -59,9 +59,14 @@
 		this.torch.position.x += dt * this.stat.speed;
 		this.flashLight.target.position.x += dt * this.stat.speed;
 	}
-	Hero.prototype.aimTo = function(x, y){
-		this.flashLight.target.position.x = this.model.position.x + x / 10;
-		this.flashLight.target.position.z = this.model.position.z + y / 10;
+	Hero.prototype.aimTo = function(vec){
+		//TODO Turn model to flash Light
+		this.flashLight.target.position.x = vec.x
+		this.flashLight.target.position.y = vec.y
+		this.flashLight.target.position.z = vec.z
+	}
+	Hero.prototype.getPos = function(){
+		return new Point(this.model.position.x, this.model.position.z);
 	}
 	global.Hero = Hero;
 })(this);

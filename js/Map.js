@@ -9,6 +9,7 @@
 			[ 1, 1, 1, 2, 2, 1, 1],
 			[ 1, 1, 1, 1, 1, 1, 1],
 		];
+		this.objList = [];
 	};
 	Map.prototype.addMeshTo = function(scene){
 		for(var i =0; i < this.data.length; i++){
@@ -19,12 +20,16 @@
 					mesh.position.z = 10 * i;
 					mesh.position.x = 10 * j;
 
+					this.objList.push(mesh);
+
 					scene.add(mesh);
 
 				} else if(this.data[i][j] == 2) {
 					var mesh = makeWalls();
 					mesh.position.z = 10 * i;
 					mesh.position.x = 10 * j;
+					
+					this.objList.push(mesh);
 
 					scene.add(mesh);
 				}

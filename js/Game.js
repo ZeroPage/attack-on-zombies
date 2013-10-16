@@ -36,11 +36,30 @@ function Game(width, height){
 	this.renderer.shadowMapSoft = true;
 
 	document.body.appendChild(this.renderer.domElement);
+	
+	var projector = new THREE.Projector();
 
 	this.renderer.domElement.addEventListener("mousemove", function(e){
 		var x = e.x || e.clientX;
 		var y = e.y || e.clientY;
-		that.hero.aimTo(x - width / 2, y - height / 2);
+		//TODO clean up
+		var vec = new THREE.Vector3(
+			(x/width) * 2 - 1,
+			-(y/height) * 2 + 1,
+			0
+		);
+		var raycaster = projector.pickingRay(vec, that.camera);
+		var arr = raycaster.intersectObjects(that.map.objList);
+		
+		var min = arr[0];
+		for(var i = 0; i < arr.length; i++){
+			if(min.distance > arr[i].distance){
+				min = arr[i];
+			}
+		}
+		if(min){
+			that.hero.aimTo(min.point);
+		}
 	});
 
 	this.keyBinder = new KeyBinder(document.body);
@@ -71,6 +90,7 @@ function Game(width, height){
 	this.clock = new THREE.Clock(true);
 	requestAnimationFrame(function () { that.loop() });
 }
+
 Game.prototype.loop = function(){
 	var dt = this.clock.getDelta();
 
