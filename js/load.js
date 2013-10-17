@@ -11,7 +11,7 @@
 			"/js/Hero.js",
 			"/js/ResourceManager.js",
 			"/js/Window.js",
-			"/js/Sound.js"
+			"/js/SoundEffect.js"
 		];
 		loadScripts(scripts, onReady);
 
@@ -51,10 +51,4 @@
 			}
 		}
 	}
-	
-	/*var backgroundSound	= "sound/background.mp3";
-	
-	document.write('<audio loop autoplay="autoplay">');
-	document.write('<source src="'+backgroundSound+'" type="audio/mpeg">');
-	document.write('</audio>');*/
 })();
