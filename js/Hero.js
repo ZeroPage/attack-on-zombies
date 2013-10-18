@@ -60,10 +60,15 @@
 		this.flashLight.target.position.x += dt * this.stat.speed;
 	}
 	Hero.prototype.aimTo = function(vec){
-		//TODO Turn model to flash Light
-		this.flashLight.target.position.x = vec.x
+		//TODO optimaize
+		//this.flashLight.target.position.x = vec.x
 		this.flashLight.target.position.y = vec.y
 		this.flashLight.target.position.z = vec.z
+		
+		var dx = vec.x - this.model.position.x;
+		var dz = vec.z - this.model.position.z;
+
+		this.model.rotation.y = -Math.atan(dz/dx) + Math.PI/2;
 	}
 	Hero.prototype.getPos = function(){
 		return new Point(this.model.position.x, this.model.position.z);
