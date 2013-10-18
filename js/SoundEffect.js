@@ -16,14 +16,14 @@ function Sound(source){
 		audioContext.decodeAudioData(getSound.response, function(buffer){
 			that.buffer = buffer;
 			that.isLoaded = true;
-		}, onError);
+		});
 	}	
 	getSound.send();
 }
 
 Sound.prototype.play = function(){
 	if(this.isLoaded === true){
-		var playSoundd = audioContext.createBufferSource();
+		var playSound = audioContext.createBufferSource();
 		playSound.buffer = this.buffer;
 		playSound.connect(audioContext.destination);
 		playSound.noteOn(0);
