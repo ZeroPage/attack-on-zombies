@@ -19,6 +19,7 @@ function SoundEffect(source){
 			that.isLoaded = true;
 			if(that.source === "sound/Background.mp3"){
 				that.loop = true;
+				
 			}
 		});
 	}	
@@ -32,5 +33,6 @@ SoundEffect.prototype.play = function(){
 		playSound.loop = this.loop;
 		playSound.connect(audioContext.destination);
 		playSound.noteOn(0);
+		this.isPlay = true;
 	}
 }
