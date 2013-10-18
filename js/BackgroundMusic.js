@@ -1,21 +1,32 @@
-	var backgroundSound	= "sound/background.mp3";	// MP3 FILE
+function BackgroundMusic(source){
+		
+	if(!window.audioContext){
+		audioContext = new webkitAudioContext;
+	}
 	
-	var audiowidth	= "300"							// WIDTH OF PLAYER
-	var borderw		= "2"							// BORDER AROUND PLAYER WIDTH
-	var bordcolor	= "0066FF"						// BORDER COLOR
-	var loopsong	= "yes"							// LOOP MUSIC | yes | no |
+	var that = this;	
+	that.source = source;
+	that.buffer = null;
+	that.isLoaded = false;
+	that.loop = false;
+	
+	var getSound = new XMLHttpRequest();
+	getSound.open("GET", that.source, true);
+	getSound.responseType = "arraybuffer";
+	getSound.onload = function(){
+		audioContext.decodeAudioData(getSound.response, function(buffer){
+			that.buffer = buffer;
+			that.isLoaded = true;
+		});
+	}	
+	getSound.send();
+}
 
-	if (loopsong === "yes") {
-		var looping5="loop";
-		var loopingE="true";
+BackgroundMusic.prototype.play = function(){
+	if(this.isLoaded === true){
+		var playSound = audioContext.createBufferSource();
+		playSound.buffer = this.buffer;
+		playSound.connect(audioContext.destination);
+		playSound.noteOn(0);
 	}
-	else{
-		var looping5="";
-		var loopingE="false";
-	}
-	document.write('<audio autoplay="autoplay">');
-	document.write('<source src="'+backgroundSound+'" type="audio/mpeg">');
-	document.write('<!--[if lt IE 9]>');
-	document.write('<bgsound src="'+backgroundSound+'" loop="1">');
-	document.write('<![endif]-->');
-	document.write('</audio>');
+}

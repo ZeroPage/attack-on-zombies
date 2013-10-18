@@ -89,6 +89,8 @@ function Game(width, height){
 		
 	this.clock = new THREE.Clock(true);
 	requestAnimationFrame(function () { that.loop() });
+	
+	this.bgm = new SoundEffect("sound/Background.mp3");	
 }
 
 Game.prototype.loop = function(){
@@ -96,6 +98,8 @@ Game.prototype.loop = function(){
 
 	this.keyBinder.check(dt);
 	this.move(dt);
+	if(!this.bgm.isPlay)
+		this.bgm.play();
 	if(this.hero)
 		this.render(dt);
 
