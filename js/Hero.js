@@ -61,14 +61,17 @@
 	}
 	Hero.prototype.aimTo = function(vec){
 		//TODO optimaize
-		//this.flashLight.target.position.x = vec.x
+		this.flashLight.target.position.x = vec.x
 		this.flashLight.target.position.y = vec.y
 		this.flashLight.target.position.z = vec.z
 		
 		var dx = vec.x - this.model.position.x;
 		var dz = vec.z - this.model.position.z;
 
-		this.model.rotation.y = -Math.atan(dz/dx) + Math.PI/2;
+		this.model.rotation.y = Math.atan(dx/dz);
+		if(dz < 0){
+			this.model.rotation.y += Math.PI;
+		}
 	}
 	Hero.prototype.getPos = function(){
 		return new Point(this.model.position.x, this.model.position.z);
