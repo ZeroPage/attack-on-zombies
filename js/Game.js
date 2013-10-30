@@ -63,9 +63,14 @@ function Game(width, height){
 	});
 
 	this.keyBinder = new KeyBinder(document.body);
+	that.walkSound = new SoundEffect("sound/Walk.mp3");
 	
 	this.keyBinder.bindKey("A", function(dt){
 		that.hero.left(dt);
+		if(!that.walkSound.isPlay){
+			that.walkSound.play();
+			that.walkSound.loop;
+		}
 	}, true); 
 	this.keyBinder.bindKey("D", function(dt){
 		that.hero.right(dt);

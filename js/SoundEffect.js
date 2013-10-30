@@ -18,8 +18,7 @@ function SoundEffect(source){
 			that.buffer = buffer;
 			that.isLoaded = true;
 			if(that.source === "sound/Background.mp3"){
-				that.loop = true;
-				
+				that.loop = true;				
 			}
 		});
 	}	
