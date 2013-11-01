@@ -2,8 +2,8 @@
 
 function Map() {
     //Random map
-    this.width = 20;
-    this.height = 20;
+    this.width = 50;
+    this.height = 50;
     this.data = new Array();
     for (var i = 0; i < this.height; i++) {
         this.data[i] = new Array();
@@ -11,7 +11,8 @@ function Map() {
             this.data[i][k] = 2;
         }
     }
-this.objList = [];
+	this.random3();
+	this.objList = [];
 };
 
 function Space(x, y, w, h) {
