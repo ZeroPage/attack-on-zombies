@@ -24,6 +24,10 @@
 		this.camera = camera;
 		this.stat = {};
 		this.stat.speed = 100;
+		
+		this.gun = new Gun();
+		this.gun.refill(100);
+		this.gun.reload();
 	}
 	Hero.prototype.addTo = function(scene){
 		scene.add(this.flashLight);
