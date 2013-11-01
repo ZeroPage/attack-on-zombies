@@ -11,10 +11,11 @@
 		this.flashLight.angle = (45/180) * Math.PI;
 		this.flashLight.distance = 100;
 
-		this.torch = new THREE.PointLight();
+		this.torch = new THREE.PointLight(0x00ff00, 0.5, 20);
 		this.torch.position.y = 10;
-		this.torch.intensity = 0.3;
-		this.torch.distance = 20;
+	
+		this.modelLight = new THREE.PointLight(0xffafff, 1, 10);
+		this.modelLight.position.y = 10;
 
 		this.model = resourceManager.getModel("Hero");
 		this.model.castShadow = true;
@@ -32,6 +33,7 @@
 	Hero.prototype.addTo = function(scene){
 		scene.add(this.flashLight);
 		scene.add(this.torch);
+		scene.add(this.modelLight);
 		scene.add(this.model);
 
 	}
@@ -40,6 +42,7 @@
 		this.flashLight.position.z -= dt * this.stat.speed;
 		this.camera.position.z -= dt * this.stat.speed;
 		this.torch.position.z -= dt * this.stat.speed;
+		this.modelLight.position.z -= dt * this.stat.speed;
 		this.flashLight.target.position.z -= dt * this.stat.speed;
 	}
 	Hero.prototype.down = function(dt){
@@ -47,6 +50,7 @@
 		this.flashLight.position.z += dt * this.stat.speed;
 		this.camera.position.z += dt * this.stat.speed;
 		this.torch.position.z += dt * this.stat.speed;
+		this.modelLight.position.z += dt * this.stat.speed;
 		this.flashLight.target.position.z += dt * this.stat.speed;
 	}
 	Hero.prototype.left = function(dt){
@@ -54,6 +58,7 @@
 		this.flashLight.position.x -= dt * this.stat.speed;
 		this.camera.position.x -= dt * this.stat.speed;
 		this.torch.position.x -= dt * this.stat.speed;
+		this.modelLight.position.x -= dt * this.stat.speed;
 		this.flashLight.target.position.x -= dt * this.stat.speed;
 	}
 	Hero.prototype.right = function(dt){
@@ -61,6 +66,7 @@
 		this.flashLight.position.x += dt * this.stat.speed;
 		this.camera.position.x += dt * this.stat.speed;
 		this.torch.position.x += dt * this.stat.speed;
+		this.modelLight.position.x += dt * this.stat.speed;
 		this.flashLight.target.position.x += dt * this.stat.speed;
 	}
 	Hero.prototype.aimTo = function(vec){

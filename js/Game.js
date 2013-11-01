@@ -48,6 +48,7 @@ function Game(width, height){
 			-(y/height) * 2 + 1,
 			0
 		);
+		
 		var raycaster = projector.pickingRay(vec, that.camera);
 		var arr = raycaster.intersectObjects(that.map.objList);
 		

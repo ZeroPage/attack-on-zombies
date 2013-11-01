@@ -186,8 +186,8 @@ Map.prototype.random3 = function () {
 
 		var material = new THREE.MeshPhongMaterial({
 			color : 0xafafaf,
-			wireframe : false, 
-			map : new THREE.ImageUtils.loadTexture("/resources/texture/floor.png")
+			wireframe : false//, 
+			//map : new THREE.ImageUtils.loadTexture("/resources/texture/floor.png")
 		});
 		var mesh = new THREE.Mesh(geometry, material);
 
@@ -200,8 +200,8 @@ Map.prototype.random3 = function () {
 		geometry.applyMatrix(getConst_WALLS_MAT());
 		
 		var material = new THREE.MeshLambertMaterial({
-			color : 0xffffff,
-		   	map : new THREE.ImageUtils.loadTexture("/resources/texture/wall.jpg")
+			color : 0xffffff
+		   	//map : new THREE.ImageUtils.loadTexture("/resources/texture/wall.jpg")
 		});
 
 		var mesh = new THREE.Mesh(geometry, material);
