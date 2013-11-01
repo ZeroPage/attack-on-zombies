@@ -21,6 +21,7 @@ function Game(width, height){
 	});
 	
 	this.map = new Map();
+	this.map.random3();
 	this.map.addMeshTo(this.scene);
 
 	if (Game.testWebGL()) {
@@ -116,7 +117,11 @@ Game.prototype.loop = function(){
 Game.prototype.render = function(dt){
 	this.renderer.render(this.scene, this.camera);
 }
-Game.prototype.move = function(dt){
+Game.prototype.move = function (dt) {
+    if (this.hero.getPos().x < 1) { this.hero.right(dt); }
+    else if (this.hero.getPos().y < 1) { this.hero.down(dt); }
+    else if (this.hero.getPos().x > this.map.width - 1) { this.hero.left(dt); }
+    else if (this.hero.getPos().y > this.map.height - 1) { this.hero.up(dt); }
 }
 Game.testWebGL = function(){
 	var canvas = document.createElement("canvas");
