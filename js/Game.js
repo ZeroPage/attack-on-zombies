@@ -63,14 +63,14 @@ function Game(width, height){
 	});
 
 	this.keyBinder = new KeyBinder(document.body);
-	that.walkSound = new SoundEffect("sound/Walk.mp3");
+	//that.walkSound = new SoundEffect("sound/Walk.mp3");
 	
 	this.keyBinder.bindKey("A", function(dt){
 		that.hero.left(dt);
-		if(!that.walkSound.isPlay){
+		/*if(!that.walkSound.isPlay){
 			that.walkSound.play();
-			that.walkSound.loop;
-		}
+			that.walkSound.loop = true;
+		}*/
 	}, true); 
 	this.keyBinder.bindKey("D", function(dt){
 		that.hero.right(dt);
@@ -103,8 +103,10 @@ Game.prototype.loop = function(){
 
 	this.keyBinder.check(dt);
 	this.move(dt);
-	if(!this.bgm.isPlay)
+	if(!this.bgm.isPlay){
 		this.bgm.play();
+		this.bgm.loop = true;
+	}
 	if(this.hero)
 		this.render(dt);
 
