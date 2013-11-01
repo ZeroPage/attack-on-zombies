@@ -20,7 +20,7 @@
 		this.model.castShadow = true;
 		this.model.receiveShadow = true;
 		this.model.position.y = 3;
-
+        
 		this.camera = camera;
 		this.stat = {};
 		this.stat.speed = 100;
