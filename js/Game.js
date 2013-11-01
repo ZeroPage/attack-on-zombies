@@ -21,6 +21,7 @@ function Game(width, height){
 	});
 	
 	this.map = new Map();
+	this.map.random3();
 	this.map.addMeshTo(this.scene);
 
 	if (Game.testWebGL()) {
