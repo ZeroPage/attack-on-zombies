@@ -184,10 +184,10 @@ Map.prototype.random3 = function () {
 		var geometry = new THREE.PlaneGeometry(10, 10);
 		geometry.applyMatrix(getConst_FLOOR_MAT());
 
-		var material = new THREE.MeshPhongMaterial({
+		var material = new THREE.MeshLambertMaterial({
 			color : 0xafafaf,
-			wireframe : false//, 
-			//map : new THREE.ImageUtils.loadTexture("/resources/texture/floor.png")
+			wireframe : false, 
+			map : new THREE.ImageUtils.loadTexture("/resources/texture/floor.png")
 		});
 		var mesh = new THREE.Mesh(geometry, material);
 
@@ -200,8 +200,8 @@ Map.prototype.random3 = function () {
 		geometry.applyMatrix(getConst_WALLS_MAT());
 		
 		var material = new THREE.MeshLambertMaterial({
-			color : 0xffffff
-		   	//map : new THREE.ImageUtils.loadTexture("/resources/texture/wall.jpg")
+			color : 0xffffff,
+		   	map : new THREE.ImageUtils.loadTexture("/resources/texture/wall_mini.png")
 		});
 
 		var mesh = new THREE.Mesh(geometry, material);
