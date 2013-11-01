@@ -48,6 +48,7 @@ function Game(width, height){
 			-(y/height) * 2 + 1,
 			0
 		);
+		
 		var raycaster = projector.pickingRay(vec, that.camera);
 		var arr = raycaster.intersectObjects(that.map.objList);
 		
@@ -117,8 +118,8 @@ Game.prototype.render = function(dt){
 Game.prototype.move = function (dt) {
     if (this.hero.getPos().x < 1) { this.hero.right(dt); }
     else if (this.hero.getPos().y < 1) { this.hero.down(dt); }
-    else if (this.hero.getPos().x > this.map.width - 1) { this.hero.left(dt); }
-    else if (this.hero.getPos().y > this.map.height - 1) { this.hero.up(dt); }
+    else if (this.hero.getPos().x > this.map.width * 10 - 1) { this.hero.left(dt); }
+    else if (this.hero.getPos().y > this.map.height * 10 - 1) { this.hero.up(dt); }
 }
 Game.testWebGL = function(){
 	var canvas = document.createElement("canvas");

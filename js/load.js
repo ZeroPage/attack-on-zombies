@@ -11,7 +11,8 @@
 			"/js/Hero.js",
 			"/js/ResourceManager.js",
 			"/js/Window.js",
-			"/js/SoundEffect.js"
+			"/js/SoundEffect.js",
+			"/js/Gun.js"
 		];
 		loadScripts(scripts, onReady);
 
