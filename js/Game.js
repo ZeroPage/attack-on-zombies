@@ -7,7 +7,7 @@ function Game(width, height){
 	this.camera.position.z = 100;
 	this.camera.position.y = 100;
 	
-	this.camera.rotation.x = - (45/ 180) * Math.PI ;
+	this.camera.rotation.x = -(45/ 180) * Math.PI;
 
 	this.scene = new THREE.Scene();
 
@@ -70,7 +70,6 @@ function Game(width, height){
 		that.hero.left(dt);
 		if(!that.walkSound.isPlay){
 			that.walkSound.play();
-			that.walkSound.loop;
 		}
 	}, true); 
 	this.keyBinder.bindKey("D", function(dt){
@@ -116,6 +115,8 @@ Game.prototype.render = function(dt){
 	this.renderer.render(this.scene, this.camera);
 }
 Game.prototype.move = function (dt) {
+	if(!this.hero)
+		return;
     if (this.hero.getPos().x < 1) { this.hero.right(dt); }
     else if (this.hero.getPos().y < 1) { this.hero.down(dt); }
     else if (this.hero.getPos().x > this.map.width * 10 - 1) { this.hero.left(dt); }
