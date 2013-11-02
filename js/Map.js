@@ -2,8 +2,8 @@
 
 function Map() {
     //Random map
-    this.width = 20;
-    this.height = 20;
+    this.width = 50;
+    this.height = 50;
     this.data = new Array();
     for (var i = 0; i < this.height; i++) {
         this.data[i] = new Array();
@@ -11,7 +11,8 @@ function Map() {
             this.data[i][k] = 2;
         }
     }
-this.objList = [];
+	this.random3();
+	this.objList = [];
 };
 
 function Space(x, y, w, h) {
@@ -183,7 +184,7 @@ Map.prototype.random3 = function () {
 		var geometry = new THREE.PlaneGeometry(10, 10);
 		geometry.applyMatrix(getConst_FLOOR_MAT());
 
-		var material = new THREE.MeshPhongMaterial({
+		var material = new THREE.MeshLambertMaterial({
 			color : 0xafafaf,
 			wireframe : false, 
 			map : new THREE.ImageUtils.loadTexture("/resources/texture/floor.png")
@@ -200,7 +201,7 @@ Map.prototype.random3 = function () {
 		
 		var material = new THREE.MeshLambertMaterial({
 			color : 0xffffff,
-		   	map : new THREE.ImageUtils.loadTexture("/resources/texture/wall.jpg")
+		   	map : new THREE.ImageUtils.loadTexture("/resources/texture/wall_mini.png")
 		});
 
 		var mesh = new THREE.Mesh(geometry, material);
