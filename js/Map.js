@@ -186,7 +186,7 @@ Map.prototype.random3 = function () {
 		var geometry = new THREE.PlaneGeometry(10, 10);
 		geometry.applyMatrix(getConst_FLOOR_MAT());
 
-		var material = new THREE.MeshLambertMaterial({
+		var material = new THREE.MeshPhongMaterial({
 			color : 0xafafaf,
 			wireframe : false, 
 			map : new THREE.ImageUtils.loadTexture("/resources/texture/floor.png")
