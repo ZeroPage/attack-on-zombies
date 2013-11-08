@@ -32,6 +32,10 @@ SoundEffect.prototype.play = function(){
 	}
 }
 SoundEffect.prototype.stop = function(){
-	playSound.pause();
-	playSound.currentTime = 0;
+	if(!this.playSound.stop)
+		this.playSound.stop = playSound.noteOff;
+	this.playSound.stop(0);
+	this.playSound.noteOff(0);
+	playSound.loop = false;
+	this.isPlay = false;
 }

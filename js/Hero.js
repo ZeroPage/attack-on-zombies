@@ -43,7 +43,7 @@
 		this.camera.position.z -= dt * this.stat.speed;
 		this.torch.position.z -= dt * this.stat.speed;
 		this.modelLight.position.z -= dt * this.stat.speed;
-		this.flashLight.target.position.z -= dt * this.stat.speed;
+		this.flashLight.target.position.z -= dt * this.stat.speed;			
 	}
 	Hero.prototype.down = function(dt){
 		this.model.position.z += dt * this.stat.speed;
