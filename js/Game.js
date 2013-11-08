@@ -116,10 +116,13 @@ Game.prototype.render = function(dt){
 	this.renderer.render(this.scene, this.camera);
 }
 Game.prototype.move = function (dt) {
+   // console.log(parseInt(this.hero.getPos().x / 10) + ", " + parseInt(this.hero.getPos().y / 10));
+    /*
     if (this.hero.getPos().x < 1) { this.hero.right(dt); }
     else if (this.hero.getPos().y < 1) { this.hero.down(dt); }
     else if (this.hero.getPos().x > this.map.width * 10 - 1) { this.hero.left(dt); }
     else if (this.hero.getPos().y > this.map.height * 10 - 1) { this.hero.up(dt); }
+    */
 }
 Game.testWebGL = function(){
 	var canvas = document.createElement("canvas");
