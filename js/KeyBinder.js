@@ -34,9 +34,9 @@ KeyBinder.prototype.onKeyDown = function(e){
 KeyBinder.prototype.onKeyUp = function(e){
 	var key = this.translate(e);
 	delete this.pressed[key];
-	this.walkSound.stop();
-	//this.walkSound.loop = false;
-	//this.walkSound.isPlay = false;
+	//this.walkSound.stop();
+	this.walkSound.loop = false;
+	this.walkSound.isPlay = false;
 }
 KeyBinder.prototype.check = function(deltaTime){
 	for(var key in this.pressed){
