@@ -29,5 +29,9 @@
 		$bulletNum[1].innerHTML = this.bulletNum;
 		$bulletNum[0].innerHTML = this.clip;
 	}
+	Handgun.prototype = new Gun();
+	function Handgun(){
+		this.cilpSize = 7;
+	}
 	global.Gun = Gun;
 })(this);

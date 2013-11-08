@@ -7,7 +7,7 @@ function Game(width, height){
 	this.camera.position.z = 100;
 	this.camera.position.y = 100;
 	
-	this.camera.rotation.x = - (45/ 180) * Math.PI ;
+	this.camera.rotation.x = -(45/ 180) * Math.PI;
 
 	this.scene = new THREE.Scene();
 
@@ -63,15 +63,10 @@ function Game(width, height){
 		}
 	});
 
-	this.keyBinder = new KeyBinder(document.body);
-	that.walkSound = new SoundEffect("sound/Walk.mp3");
+	this.keyBinder = new KeyBinder(document.body);	
 	
 	this.keyBinder.bindKey("A", function(dt){
 		that.hero.left(dt);
-		if(!that.walkSound.isPlay){
-			that.walkSound.play();
-			that.walkSound.loop;
-		}
 	}, true); 
 	this.keyBinder.bindKey("D", function(dt){
 		that.hero.right(dt);
@@ -104,8 +99,10 @@ Game.prototype.loop = function(){
 
 	this.keyBinder.check(dt);
 	this.move(dt);
-	if(!this.bgm.isPlay)
+	if(!this.bgm.isPlay){
 		this.bgm.play();
+		this.bgm.loop = true;
+	}
 	if(this.hero)
 		this.render(dt);
 
@@ -117,12 +114,15 @@ Game.prototype.render = function(dt){
 }
 Game.prototype.move = function (dt) {
    // console.log(parseInt(this.hero.getPos().x / 10) + ", " + parseInt(this.hero.getPos().y / 10));
-    /*
+    
+	if(!this.hero)
+		return;
+
     if (this.hero.getPos().x < 1) { this.hero.right(dt); }
     else if (this.hero.getPos().y < 1) { this.hero.down(dt); }
     else if (this.hero.getPos().x > this.map.width * 10 - 1) { this.hero.left(dt); }
     else if (this.hero.getPos().y > this.map.height * 10 - 1) { this.hero.up(dt); }
-    */
+    
 }
 Game.testWebGL = function(){
 	var canvas = document.createElement("canvas");

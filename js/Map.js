@@ -581,8 +581,6 @@
         }
     }
 
-    
-
 	Map.prototype.addMeshTo = function(scene){
 		for(var i =0; i < this.data.length; i++){
 			for(var j = 0; j < this.data[i].length; j++){
@@ -600,7 +598,7 @@
 					var mesh = makeWalls();
 					mesh.position.z = 10 * i;
 					mesh.position.x = 10 * j;
-					
+
 					this.objList.push(mesh);
 
 					scene.add(mesh);
@@ -617,7 +615,7 @@
 		__FLOOR_MAT__.multiply(mat);
 		return __FLOOR_MAT__;
 	}
-	
+
 	var __WALLS_MAT__;
 	function getConst_WALLS_MAT(){
 		if(__WALLS_MAT__) return  __WALLS_MAT__;
@@ -642,7 +640,7 @@
 		var geometry = new THREE.CubeGeometry(10, 10, 10);
 		geometry.applyMatrix(getConst_WALLS_MAT());
 		
-		var material = new THREE.MeshLambertMaterial({
+		var material = new THREE.MeshPhongMaterial({
 			color : 0xffffff,
 		   	map : new THREE.ImageUtils.loadTexture("/resources/texture/wall_mini.png")
 		});

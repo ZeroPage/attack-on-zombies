@@ -9,7 +9,7 @@
 		this.flashLight.shadowCameraFov = 90;
 		this.flashLight.position.y = 3;
 		this.flashLight.angle = (45/180) * Math.PI;
-		this.flashLight.distance = 100;
+		this.flashLight.distance = 130;
 
 		this.torch = new THREE.PointLight(0x00ff00, 0.5, 20);
 		this.torch.position.y = 10;
@@ -43,7 +43,7 @@
 		this.camera.position.z -= dt * this.stat.speed;
 		this.torch.position.z -= dt * this.stat.speed;
 		this.modelLight.position.z -= dt * this.stat.speed;
-		this.flashLight.target.position.z -= dt * this.stat.speed;
+		this.flashLight.target.position.z -= dt * this.stat.speed;			
 	}
 	Hero.prototype.down = function(dt){
 		this.model.position.z += dt * this.stat.speed;

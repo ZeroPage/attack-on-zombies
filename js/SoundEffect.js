@@ -8,7 +8,6 @@ function SoundEffect(source){
 	that.source = source;
 	that.buffer = null;
 	that.isLoaded = false;
-	that.loop = false;
 	
 	var getSound = new XMLHttpRequest();
 	getSound.open("GET", that.source, true);
@@ -16,10 +15,7 @@ function SoundEffect(source){
 	getSound.onload = function(){
 		audioContext.decodeAudioData(getSound.response, function(buffer){
 			that.buffer = buffer;
-			that.isLoaded = true;
-			if(that.source === "sound/Background.mp3"){
-				that.loop = true;				
-			}
+			that.isLoaded = true;			
 		});
 	}	
 	getSound.send();
@@ -34,4 +30,12 @@ SoundEffect.prototype.play = function(){
 		playSound.noteOn(0);
 		this.isPlay = true;
 	}
+}
+SoundEffect.prototype.stop = function(){
+	if(!this.playSound.stop)
+		this.playSound.stop = playSound.noteOff;
+	this.playSound.stop(0);
+	this.playSound.noteOff(0);
+	playSound.loop = false;
+	this.isPlay = false;
 }
