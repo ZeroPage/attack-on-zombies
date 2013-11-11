@@ -1,7 +1,6 @@
 function KeyBinder(element){
 	var that = this;
-	this.walkSound = new SoundEffect("sound/Walk.mp3");
-	
+		
 	element.addEventListener("mousemove", function(e){
 		that.onMouseMove(e);
 	});
@@ -34,18 +33,11 @@ KeyBinder.prototype.onKeyDown = function(e){
 KeyBinder.prototype.onKeyUp = function(e){
 	var key = this.translate(e);
 	delete this.pressed[key];
-	//this.walkSound.stop();
-	this.walkSound.loop = false;
-	this.walkSound.isPlay = false;
 }
 KeyBinder.prototype.check = function(deltaTime){
 	for(var key in this.pressed){
 		if(this.pressed[key] && this.keymap[key] && this.keymap[key].contiued){
 			this.keymap[key].func(deltaTime, this.pos);
-			if(!this.walkSound.isPlay && (key === "A" || key === "D" || key === "W" || key === "S")){
-				this.walkSound.play();
-				this.walkSound.loop = true;
-			}
 		}
 	}
 }

@@ -64,18 +64,36 @@ function Game(width, height){
 	});
 
 	this.keyBinder = new KeyBinder(document.body);	
+	that.walkSound = new SoundEffect("sound/Walk.mp3");
+	this.playing = true;
 	
 	this.keyBinder.bindKey("A", function(dt){
 		that.hero.left(dt);
+		if(this.playing){
+			that.walkSound.play();
+		}
+		this.playing = !this.playing;
 	}, true); 
 	this.keyBinder.bindKey("D", function(dt){
 		that.hero.right(dt);
+		if(this.playing){
+			that.walkSound.play();
+		}
+		this.playing = !this.playing;
 	}, true);
 	this.keyBinder.bindKey("W", function(dt){
 		that.hero.up(dt);
+		if(this.playing){
+			that.walkSound.play();
+		}
+		this.playing = !this.playing;
 	}, true);
 	this.keyBinder.bindKey("S", function(dt){
 		that.hero.down(dt);
+		if(this.playing){
+			that.walkSound.play();
+		}
+		this.playing = !this.playing;
 	}, true);
 
 	var $itemWindow = new Window("item");
