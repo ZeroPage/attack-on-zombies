@@ -1,6 +1,6 @@
 (function (global) {
 
-    var __gDebug__;
+    //var __gDebug__;
 
     var MAP_FEATURE = {
         NO_USE :        0,
@@ -94,9 +94,9 @@
     Map.prototype.getCell = function (x, y) {
         if (y < 0 || x < 0 || x > this.xsize || y > this.ysize)
             return;
-        console.log("path : " + __gDebug__);
-        console.log(x + " and " + y);
-        console.log("=" + this.data[y][x]);
+        //console.log("path : " + __gDebug__);
+        //console.log(x + " and " + y);
+        //console.log("=" + this.data[y][x]);
         return this.data[y][x];
     }
     Map.prototype.getRand = function (min, max) {
@@ -131,7 +131,7 @@
         var xsize = this.xsize - 1;
         var ysize = this.ysize - 1;
 
-        __gDebug__ = __gDebug__ + "-> makeCorridor";
+        //__gDebug__ = __gDebug__ + "-> makeCorridor";
 
         switch (dir) {
             case 0:
@@ -210,7 +210,7 @@
         var xsize = this.xsize - 1;
         if (direction > 0 && direction < 4) dir = direction;
 
-        __gDebug__ = __gDebug__ + "-> makeRoom";
+        //__gDebug__ = __gDebug__ + "-> makeRoom";
  
         switch(dir){
             case 0:
@@ -328,7 +328,7 @@
         var xsize = this.xsize;
         var ysize = this.ysize;
 
-        __gDebug__ = "createDungun";
+        //__gDebug__ = "createDungun";
 
 
         for (var y = 0; y < ysize; y++){
@@ -342,7 +342,7 @@
         }
         this.makeRoom(parseInt(xsize/2), parseInt(ysize/2), MAP_SIZE.ROOM_MAX_WIDTH, MAP_SIZE.ROOM_MIN_HEIGHT, this.getRand(0,3));
         
-        __gDebug__ = "createDungun->CenterRoom";
+       // __gDebug__ = "createDungun->CenterRoom";
 
         var currentFeatures = 1;
  
@@ -351,7 +351,7 @@
                 break;
             }
 
-            __gDebug__ = "createDungun->CenterRoom->obj:"+currentFeatures+"try:"+countingTries;
+            //__gDebug__ = "createDungun->CenterRoom->obj:"+currentFeatures+"try:"+countingTries;
 
             var newx = 0;
             var xmod = 0;
@@ -428,7 +428,7 @@
             }
         }
         
-        __gDebug__ = "createDungun->CenterRoom->otherobject";
+        //__gDebug__ = "createDungun->CenterRoom->otherobject";
         
         //sprinkle out the bonusstuff (stairs, chests etc.) over the map
         var newx = 0;
