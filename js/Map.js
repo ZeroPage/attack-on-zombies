@@ -26,8 +26,8 @@
     function Map() {
         //enum//in this time, i just call 1, 2
 
-        this.xmax = 80;
-        this.ymax = 80;
+        this.xmax = 50;
+        this.ymax = 50;
 
         this.xsize = 0;
         this.ysize = 0;
@@ -37,8 +37,8 @@
         this.chanceRoom = 75;
         this.chanceCorridor = 25;
 
-        this.width = 80;
-        this.height = 80;
+        this.width = 50;
+        this.height = 50;
         this.data = new Array();
         for (var i = 0; i < this.height; i++) {
             this.data[i] = new Array();
