@@ -70,7 +70,6 @@
 		this.flashLight.target.position.x += dt * this.stat.speed;
 	}
 	Hero.prototype.aimTo = function(vec){
-		//TODO optimaize
 		this.flashLight.target.position.x = vec.x
 		this.flashLight.target.position.y = vec.y
 		this.flashLight.target.position.z = vec.z
@@ -85,6 +84,20 @@
 	}
 	Hero.prototype.getPos = function(){
 		return new Point(this.model.position.x, this.model.position.z);
+	}
+	Hero.prototype.setPosition = function(pos){
+		this.model.position.x += pos.x * 10 + 5;
+		this.model.position.z += pos.y * 10 + 5;
+		this.flashLight.position.x += pos.x * 10 + 5;
+		this.flashLight.position.z += pos.y * 10 + 5;
+		this.camera.position.x += pos.x * 10 + 5;
+		this.camera.position.z += pos.y * 10 + 5;
+		this.torch.position.x += pos.x * 10 + 5;
+		this.torch.position.z += pos.y * 10 + 5;
+		this.modelLight.position.x += pos.x * 10 + 5;
+		this.modelLight.position.z += pos.y * 10 + 5;
+		this.flashLight.target.position.x += pos.x * 10 + 5;
+		this.flashLight.target.position.z += pos.y * 10 + 5;
 	}
 	global.Hero = Hero;
 })(this);
