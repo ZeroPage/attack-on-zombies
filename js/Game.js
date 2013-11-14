@@ -18,6 +18,7 @@ function Game(width, height){
 		
 		that.hero = new Hero(that.camera);
 		that.hero.addTo(that.scene);
+		that.hero.setPosition(that.map.getHeroXY());
 	});
 	
 	this.map = new Map();
@@ -141,6 +142,10 @@ Game.prototype.move = function (dt) {
     else if (this.hero.getPos().x > this.map.width * 10 - 1) { this.hero.left(dt); }
     else if (this.hero.getPos().y > this.map.height * 10 - 1) { this.hero.up(dt); }
     
+    
+    var x = parseInt((this.hero.getPos().y -5)/10);
+	var y = this.hero.getPos().y/10;
+	//console.log(x, ";", y);
 }
 Game.testWebGL = function(){
 	var canvas = document.createElement("canvas");

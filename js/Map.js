@@ -69,9 +69,6 @@
     function SpaceGraph() {
         this.node = new Array(); // space
         this.link = new Array(); // road
-        // adjection list
-        // [0] - flag of three of this (1 : node - link, 2 : link - link, 3 : link - node)
-        // [1],[2] - node or link index
     };
 
     SpaceGraph.prototype.addSpace = function (space) {
@@ -94,9 +91,6 @@
     Map.prototype.getCell = function (x, y) {
         if (y < 0 || x < 0 || x > this.xsize || y > this.ysize)
             return;
-        console.log("path : " + __gDebug__);
-        console.log(x + " and " + y);
-        console.log("=" + this.data[y][x]);
         return this.data[y][x];
     }
     Map.prototype.getRand = function (min, max) {
@@ -110,12 +104,13 @@
         var t_space = this.spaceManager.node;
         while (true) {
             var index = this.getRand(0, t_space.length - 1);
-            var xy = new Array(parseInt((t_space[index].x + t_space[index].width) / 2), parseInt((t_space[index].y + t_space[index].height) / 2));
-            if (this.data[xy[1]][xy[0]] == 2) {
+			var x = parseInt((t_space[index].x + t_space[index].width) / 2);
+			var y = parseInt((t_space[index].y + t_space[index].height) / 2);
+            if (this.data[x][y] == 1) {
                 break;
             }
         }
-        return xy;
+        return new Point(x, y);
     }
     Map.prototype.makeSpaceLinkedList = function () {
         
@@ -526,7 +521,7 @@
     }
 
     //random algorithm_third
-    //Å×Æ®¸®½º ¹æ¹ý.
+    //ï¿½ï¿½Æ®ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
     Map.prototype.random3 = function () {
         var spaceManager = new SpaceGraph();
 
@@ -587,8 +582,8 @@
 				if(this.data[i][j] != 2){
 					//tile
 					var mesh = makeMesh(this.data[i][j]);
-					mesh.position.z = 10 * i;
-					mesh.position.x = 10 * j;
+					mesh.position.x = 10 * i;
+					mesh.position.z = 10 * j;
 
 					this.objList.push(mesh);
 
@@ -596,9 +591,8 @@
 
 				} else if(this.data[i][j] == 2) {
 					var mesh = makeWalls();
-					mesh.position.z = 10 * i;
-					mesh.position.x = 10 * j;
-
+					mesh.position.x = 10 * i;
+					mesh.position.z = 10 * j;
 					this.objList.push(mesh);
 
 					scene.add(mesh);
