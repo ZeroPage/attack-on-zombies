@@ -17,8 +17,14 @@
 		loadScripts(scripts, onReady);
 
 		function onReady(filepath){
-			console.log("staring App...");
-			new Game(window.innerWidth, window.innerHeight);
+			var resourceManager = new ResourceManager();
+			resourceManager.load({
+					Hero : "models/test.js",
+					Test : "models/editable-person.js"
+				}, function(){
+				console.log("staring App...");
+				new Game(window.innerWidth, window.innerHeight);	
+			});
 		}
 	}
 

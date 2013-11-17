@@ -12,17 +12,15 @@ function Game(width, height){
 	this.scene = new THREE.Scene();
 
 	var loader = new THREE.JSONLoader();
-		
-	var resourceManager = new ResourceManager();
-	resourceManager.load({Hero : "models/editable-person.js"}, function(){
-		
-		that.hero = new Hero(that.camera);
-		that.hero.addTo(that.scene);
-		that.hero.setPosition(that.map.getHeroXY());
-	});
+	
+	
 	
 	this.map = new Map();
 	this.map.addMeshTo(this.scene);
+	
+	that.hero = new Hero(that.camera);
+	that.hero.addTo(that.scene);
+	that.hero.setPosition(that.map.getHeroXY());
 
 	if (Game.testWebGL()) {
 		this.renderer = new THREE.WebGLRenderer();
