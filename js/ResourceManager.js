@@ -16,10 +16,9 @@
 		}
 
 		function loadModel(name, path){
-			var material = new THREE.MeshPhongMaterial({color:0xffffff});
-
-			loader.load(path, function(geometry){
-				models[name] = new THREE.Mesh(geometry, material);
+			loader.load(path, function(geometry, material){
+				var material = new THREE.MeshFaceMaterial(material);
+				models[name] = new THREE.SkinnedMesh(geometry, material);
 				complete();
 			});
 		}
