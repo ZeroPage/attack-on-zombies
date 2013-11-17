@@ -142,7 +142,6 @@ Game.prototype.move = function (dt) {
     else if (this.hero.getPos().x > this.map.width * 10 - 1) { this.hero.left(dt); }
     else if (this.hero.getPos().y > this.map.height * 10 - 1) { this.hero.up(dt); }
     
-    
     var around = 1;
 	var wallSize = 10;
 	var wall = 2;
@@ -157,8 +156,6 @@ Game.prototype.move = function (dt) {
 	if(this.map.data[x][down] == wall)	this.hero.up(dt);
 	if(this.map.data[right][y] == wall)	this.hero.left(dt);
 	if(this.map.data[left][y] == wall)	this.hero.right(dt);
-	
-	//console.log(up + ", "+this.map.data[x][up]);
 }
 Game.testWebGL = function(){
 	var canvas = document.createElement("canvas");
