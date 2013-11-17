@@ -143,9 +143,22 @@ Game.prototype.move = function (dt) {
     else if (this.hero.getPos().y > this.map.height * 10 - 1) { this.hero.up(dt); }
     
     
-    var x = parseInt((this.hero.getPos().y -5)/10);
-	var y = this.hero.getPos().y/10;
-	//console.log(x, ";", y);
+    var around = 1;
+	var wallSize = 10;
+	var wall = 2;
+	var x = parseInt(this.hero.getPos().x/10);
+	var y = parseInt(this.hero.getPos().y/10);
+    var left = parseInt((this.hero.getPos().x-around)/wallSize);
+	var right = parseInt((this.hero.getPos().x+around)/wallSize);
+	var up = parseInt((this.hero.getPos().y-around)/wallSize);
+	var down = parseInt((this.hero.getPos().y+around)/wallSize);
+	
+	if(this.map.data[x][up] == wall)	this.hero.down(dt);
+	if(this.map.data[x][down] == wall)	this.hero.up(dt);
+	if(this.map.data[right][y] == wall)	this.hero.left(dt);
+	if(this.map.data[left][y] == wall)	this.hero.right(dt);
+	
+	//console.log(up + ", "+this.map.data[x][up]);
 }
 Game.testWebGL = function(){
 	var canvas = document.createElement("canvas");
