@@ -65,30 +65,51 @@ function Game(width, height){
 	this.keyBinder = new KeyBinder(document.body);	
 	that.walkSound = new SoundEffect("sound/Walk.mp3");
 	this.playing = true;
-	
+
 	this.keyBinder.bindKey("A", function(dt){
-		that.hero.left(dt);
+		var x = parseInt((that.hero.getPos().x+5) / 10);
+		var y = parseInt(that.hero.getPos().y / 10);
+		
+		var lx = x-1;
+		if(that.map.data[lx][y] != 2)
+			that.hero.left(dt);
+			
 		if(this.playing){
 			that.walkSound.play();
 		}
 		this.playing = !this.playing;
 	}, true); 
 	this.keyBinder.bindKey("D", function(dt){
-		that.hero.right(dt);
+		var x = parseInt((that.hero.getPos().x-5) / 10);
+		var y = parseInt(that.hero.getPos().y / 10);
+		
+		var rx = x+1;
+		if(that.map.data[rx][y] != 2)
+			that.hero.right(dt);
 		if(this.playing){
 			that.walkSound.play();
 		}
 		this.playing = !this.playing;
 	}, true);
 	this.keyBinder.bindKey("W", function(dt){
-		that.hero.up(dt);
+		var x = parseInt(that.hero.getPos().x / 10);
+		var y = parseInt((that.hero.getPos().y+5) / 10);
+		
+		var uy = y-1;
+		if(that.map.data[x][uy] != 2)
+			that.hero.up(dt);
 		if(this.playing){
 			that.walkSound.play();
 		}
 		this.playing = !this.playing;
 	}, true);
 	this.keyBinder.bindKey("S", function(dt){
-		that.hero.down(dt);
+		var x = parseInt(that.hero.getPos().x / 10);
+		var y = parseInt((that.hero.getPos().y-5) / 10);
+		
+		var dy = y+1;
+		if(that.map.data[x][dy] != 2)
+			that.hero.down(dt);
 		if(this.playing){
 			that.walkSound.play();
 		}
@@ -107,7 +128,7 @@ function Game(width, height){
 		
 	this.clock = new THREE.Clock(true);
 	requestAnimationFrame(function () { that.loop() });
-	
+
 	this.bgm = new SoundEffect("sound/Background.mp3");	
 }
 
@@ -130,8 +151,6 @@ Game.prototype.render = function(dt){
 	this.renderer.render(this.scene, this.camera);
 }
 Game.prototype.move = function (dt) {
-   // console.log(parseInt(this.hero.getPos().x / 10) + ", " + parseInt(this.hero.getPos().y / 10));
-    
 	if(!this.hero)
 		return;
 
@@ -139,21 +158,6 @@ Game.prototype.move = function (dt) {
     else if (this.hero.getPos().y < 1) { this.hero.down(dt); }
     else if (this.hero.getPos().x > this.map.width * 10 - 1) { this.hero.left(dt); }
     else if (this.hero.getPos().y > this.map.height * 10 - 1) { this.hero.up(dt); }
-    
-    var around = 1;
-	var wallSize = 10;
-	var wall = 2;
-	var x = parseInt(this.hero.getPos().x/10);
-	var y = parseInt(this.hero.getPos().y/10);
-    var left = parseInt((this.hero.getPos().x-around)/wallSize);
-	var right = parseInt((this.hero.getPos().x+around)/wallSize);
-	var up = parseInt((this.hero.getPos().y-around)/wallSize);
-	var down = parseInt((this.hero.getPos().y+around)/wallSize);
-	
-	if(this.map.data[x][up] == wall)	this.hero.down(dt);
-	if(this.map.data[x][down] == wall)	this.hero.up(dt);
-	if(this.map.data[right][y] == wall)	this.hero.left(dt);
-	if(this.map.data[left][y] == wall)	this.hero.right(dt);
 }
 Game.testWebGL = function(){
 	var canvas = document.createElement("canvas");
