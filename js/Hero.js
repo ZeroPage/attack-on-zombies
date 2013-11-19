@@ -21,6 +21,14 @@
 		this.model.castShadow = true;
 		this.model.receiveShadow = true;
 		this.model.position.y = 3;
+		
+		this.animation = new THREE.Animation(
+    		this.model,
+    		'PlayerArmatureAction',
+    		THREE.AnimationHandler.CATMULLROM
+  		);
+		//XXX To test
+		this.animation.play();
         
 		this.camera = camera;
 		this.stat = {};
@@ -35,7 +43,9 @@
 		scene.add(this.torch);
 		scene.add(this.modelLight);
 		scene.add(this.model);
-
+	}
+	Hero.prototype.move = function(dt){
+		this.animation.update(dt * 100);
 	}
 	Hero.prototype.up = function(dt){
 		this.model.position.z -= dt * this.stat.speed;
@@ -43,7 +53,8 @@
 		this.camera.position.z -= dt * this.stat.speed;
 		this.torch.position.z -= dt * this.stat.speed;
 		this.modelLight.position.z -= dt * this.stat.speed;
-		this.flashLight.target.position.z -= dt * this.stat.speed;			
+		this.flashLight.target.position.z -= dt * this.stat.speed;
+		this.move(dt);
 	}
 	Hero.prototype.down = function(dt){
 		this.model.position.z += dt * this.stat.speed;
@@ -52,6 +63,7 @@
 		this.torch.position.z += dt * this.stat.speed;
 		this.modelLight.position.z += dt * this.stat.speed;
 		this.flashLight.target.position.z += dt * this.stat.speed;
+		this.move(dt);
 	}
 	Hero.prototype.left = function(dt){
 		this.model.position.x -= dt * this.stat.speed;
@@ -60,6 +72,7 @@
 		this.torch.position.x -= dt * this.stat.speed;
 		this.modelLight.position.x -= dt * this.stat.speed;
 		this.flashLight.target.position.x -= dt * this.stat.speed;
+		this.move(dt);
 	}
 	Hero.prototype.right = function(dt){
 		this.model.position.x += dt * this.stat.speed;
@@ -68,6 +81,7 @@
 		this.torch.position.x += dt * this.stat.speed;
 		this.modelLight.position.x += dt * this.stat.speed;
 		this.flashLight.target.position.x += dt * this.stat.speed;
+		this.move(dt);
 	}
 	Hero.prototype.aimTo = function(vec){
 		this.flashLight.target.position.x = vec.x
