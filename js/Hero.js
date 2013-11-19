@@ -1,6 +1,8 @@
 (function (global){
 	function Hero(camera){
 		var resourceManager = new ResourceManager();
+		
+		this.pos = new Point(0,0);
 
 		this.flashLight = new THREE.SpotLight();
 		this.flashLight.castShadow = true;
@@ -44,44 +46,37 @@
 		scene.add(this.modelLight);
 		scene.add(this.model);
 	}
-	Hero.prototype.move = function(dt){
+	Hero.prototype.update = function(dt){
+		this.model.position.x = this.pos.x;
+		this.model.position.z = this.pos.y;
+		this.flashLight.position.x = this.pos.x;
+		this.flashLight.position.z = this.pos.y;
+		this.camera.position.x = this.pos.x;
+		this.camera.position.z = 100 + this.pos.y;
+		this.torch.position.x = this.pos.x;
+		this.torch.position.z = this.pos.y;
+		this.modelLight.position.x = this.pos.x;
+		this.modelLight.position.z = this.pos.y;
+		this.flashLight.target.position.x = this.pos.x;
+		this.flashLight.target.position.z = this.pos.y;
+		
 		this.animation.update(dt * 100);
 	}
 	Hero.prototype.up = function(dt){
-		this.model.position.z -= dt * this.stat.speed;
-		this.flashLight.position.z -= dt * this.stat.speed;
-		this.camera.position.z -= dt * this.stat.speed;
-		this.torch.position.z -= dt * this.stat.speed;
-		this.modelLight.position.z -= dt * this.stat.speed;
-		this.flashLight.target.position.z -= dt * this.stat.speed;
-		this.move(dt);
+		this.pos.y -= dt * this.stat.speed;
+		this.update(dt);
 	}
 	Hero.prototype.down = function(dt){
-		this.model.position.z += dt * this.stat.speed;
-		this.flashLight.position.z += dt * this.stat.speed;
-		this.camera.position.z += dt * this.stat.speed;
-		this.torch.position.z += dt * this.stat.speed;
-		this.modelLight.position.z += dt * this.stat.speed;
-		this.flashLight.target.position.z += dt * this.stat.speed;
-		this.move(dt);
+		this.pos.y += dt * this.stat.speed;
+		this.update(dt);
 	}
 	Hero.prototype.left = function(dt){
-		this.model.position.x -= dt * this.stat.speed;
-		this.flashLight.position.x -= dt * this.stat.speed;
-		this.camera.position.x -= dt * this.stat.speed;
-		this.torch.position.x -= dt * this.stat.speed;
-		this.modelLight.position.x -= dt * this.stat.speed;
-		this.flashLight.target.position.x -= dt * this.stat.speed;
-		this.move(dt);
+		this.pos.x -= dt * this.stat.speed;
+		this.update(dt);
 	}
 	Hero.prototype.right = function(dt){
-		this.model.position.x += dt * this.stat.speed;
-		this.flashLight.position.x += dt * this.stat.speed;
-		this.camera.position.x += dt * this.stat.speed;
-		this.torch.position.x += dt * this.stat.speed;
-		this.modelLight.position.x += dt * this.stat.speed;
-		this.flashLight.target.position.x += dt * this.stat.speed;
-		this.move(dt);
+		this.pos.x += dt * this.stat.speed;
+		this.update(dt);
 	}
 	Hero.prototype.aimTo = function(vec){
 		this.flashLight.target.position.x = vec.x
@@ -97,21 +92,11 @@
 		}
 	}
 	Hero.prototype.getPos = function(){
-		return new Point(this.model.position.x, this.model.position.z);
+		return this.pos;
 	}
 	Hero.prototype.setPosition = function(pos){
-		this.model.position.x += pos.x * 10 + 5;
-		this.model.position.z += pos.y * 10 + 5;
-		this.flashLight.position.x += pos.x * 10 + 5;
-		this.flashLight.position.z += pos.y * 10 + 5;
-		this.camera.position.x += pos.x * 10 + 5;
-		this.camera.position.z += pos.y * 10 + 5;
-		this.torch.position.x += pos.x * 10 + 5;
-		this.torch.position.z += pos.y * 10 + 5;
-		this.modelLight.position.x += pos.x * 10 + 5;
-		this.modelLight.position.z += pos.y * 10 + 5;
-		this.flashLight.target.position.x += pos.x * 10 + 5;
-		this.flashLight.target.position.z += pos.y * 10 + 5;
+		this.pos = new Point(pos.x * 10 +5, pos.y * 10 + 5);
+		this.update(0)
 	}
 	global.Hero = Hero;
 })(this);
