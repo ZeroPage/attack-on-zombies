@@ -19,8 +19,13 @@
 		function onReady(filepath){
 			var resourceManager = new ResourceManager();
 			resourceManager.load({
-					Hero : "models/test.js",
-					Test : "models/editable-person.js"
+					models : {
+						Hero : "models/test.js",
+						Test : "models/editable-person.js"
+					},
+					sounds : {
+						
+					}
 				}, function(){
 				console.log("staring App...");
 				new Game(window.innerWidth, window.innerHeight);	
