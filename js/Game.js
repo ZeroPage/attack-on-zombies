@@ -20,6 +20,17 @@ function Game(width, height){
 	that.hero.addTo(that.scene);
 	that.hero.setPosition(that.map.getHeroXY());
 
+	
+	//temporary setting in zombie create - need to combine stage class or do something.
+	this.zombie = new Array();
+	for(var i = 0; i < 50; i++) {
+		that.zombie.push(new Zombie(that.map));
+		that.zombie[i].addTo(that.scene);
+		var zombiePos = that.map.getMonsterPos();
+		that.zombie[i].setPosition(zombiePos[0], zombiePos[1], zombiePos[2]); // x, y, index
+	}
+
+
 	if (Game.testWebGL()) {
 		this.renderer = new THREE.WebGLRenderer();
 		console.log("WebGL mode!");
@@ -103,6 +114,16 @@ Game.prototype.loop = function(){
 	this.keyBinder.check(dt);
 	this.move(dt);
 	
+	//temporary setting in zombie AI - need to combine stage class or do something.
+	for(var count=0; count<50; count++) {
+		this.zombie[count].update(dt, this.hero.getPos().x, this.hero.getPos().y);
+	}
+	
+	if(!this.bgm.isPlay){
+		this.bgm.play();
+		this.bgm.loop = true;
+	}
+
 	if(this.hero)
 		this.render(dt);
 
@@ -114,6 +135,7 @@ Game.prototype.render = function(dt){
 	this.renderer.render(this.scene, this.camera);
 }
 Game.prototype.move = function (dt) {
+
 	if(!this.hero)
 		return;
 
