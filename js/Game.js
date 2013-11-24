@@ -110,6 +110,7 @@ Game.prototype.loop = function(){
 	requestAnimationFrame(function(){that.loop()});
 }
 Game.prototype.render = function(dt){
+	this.hero.update(dt);
 	this.renderer.render(this.scene, this.camera);
 }
 Game.prototype.move = function (dt) {

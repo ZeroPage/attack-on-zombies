@@ -21,7 +21,7 @@ AudioContext = window.AudioContext || webkitAudioContext;
 			var resourceManager = new ResourceManager();
 			resourceManager.load({
 					models : {
-						Hero : "models/test.js",
+						Hero : "models/player.js",
 						Test : "models/editable-person.js"
 					},
 					sounds : {

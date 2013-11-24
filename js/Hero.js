@@ -14,11 +14,14 @@
 		this.flashLight.angle = (45/180) * Math.PI;
 		this.flashLight.distance = 130;
 
-		this.torch = new THREE.PointLight(0x00ff00, 0.5, 20);
+		this.torch = new THREE.PointLight(0x00ff00, 0.8, 20);
 		this.torch.position.y = 15;
+		
+		this.modelLight = new THREE.SpotLight(0xffafff, 1, 120);
+		this.modelLight.position.y = 20;
 	
-		this.modelLight = new THREE.PointLight(0xffafff, 1, 15);
-		this.modelLight.position.y = 15;
+		//this.modelLight = new THREE.PointLight(0xffafff, 1, 15);
+		//this.modelLight.position.y = 15;
 
 		this.model = resourceManager.getModel("Hero");
 		this.model.position.y = 0;
@@ -38,6 +41,8 @@
 		this.gun = new Gun();
 		this.gun.refill(100);
 		this.gun.reload();
+		
+		this.isMoveing = false;
 	}
 	Hero.prototype.addTo = function(scene){
 		scene.add(this.flashLight);
@@ -55,91 +60,86 @@
 		this.torch.position.x = this.pos.x;
 		this.torch.position.z = this.pos.y;
 		this.modelLight.position.x = this.pos.x;
-		this.modelLight.position.z = this.pos.y;
+		this.modelLight.position.z = this.pos.y + 20;
+		this.modelLight.target.position.x = this.pos.x;
+		this.modelLight.target.position.z = this.pos.y;
+		
 		//TODO target must move whe player move
 		//this.flashLight.target.position.x = this.pos.x;
 		//this.flashLight.target.position.z = this.pos.y;
-		
-		this.animation.update(dt * 100);
+		if(this.isMoveing)
+			this.animation.update(dt * this.stat.speed/10);
+		this.isMoveing = false;
 	}
 	Hero.prototype.up = function(dt){
-		var futy = parseInt((this.pos.y - dt * this.stat.speed) / 10);
-
-		if(this.isCollide(this.pos.y, "up", -1, dt)) {
-			while( this.pos.y > (futy+1)*10+5 )
-				this.pos.y--;
-		}
-		else {
+		var wallPos = this.checkWall(dt, {x : 0, y : -1});
+		if(!wallPos){
 			this.pos.y -= dt * this.stat.speed;
+		} else {
+			this.pos.y = (wallPos.y+1) * 10 + 1;
 		}
-		this.update(dt);
+		
+		this.isMoveing = true;
 	}
 	Hero.prototype.down = function(dt){
-		var futy = parseInt((this.pos.y + dt * this.stat.speed) / 10);
-		
-		if(this.isCollide(this.pos.y, "down", 1, dt)) {
-			while( this.pos.y < (futy-1)*10-5 )
-				this.pos.y++;
-		}
-		else {
+		var wallPos = this.checkWall(dt, {x : 0, y : 1});
+		if(!wallPos){
 			this.pos.y += dt * this.stat.speed;
+		} else {
+			this.pos.y = (wallPos.y) * 10 - 1;
 		}
-		this.update(dt);
+		
+		this.isMoveing = true;
 	}
 	Hero.prototype.left = function(dt){
-		var futx = parseInt((this.pos.x - dt * this.stat.speed) / 10);
-
-		try {
-			if(this.isCollide(this.pos.x, "left", -1, dt)) {
-				while( this.pos.x > (futx+1)*10+5 )
-					this.pos.x--;
-			}
-			else {
-				this.pos.x -= dt * this.stat.speed;
-			}
-		} catch(e) {
-			return;
+		var wallPos = this.checkWall(dt, {x : -1, y : 0});
+		if(!wallPos){
+			this.pos.x -= dt * this.stat.speed;
+		} else {
+			this.pos.x = (wallPos.x + 1) * 10 + 1;
 		}
 		
-		this.update(dt);
+		this.isMoveing = true;
 	}
 	Hero.prototype.right = function(dt){
-		var futx = parseInt((this.pos.x + dt * this.stat.speed) / 10);
-
-		try {
-			if(this.isCollide(this.pos.x, "right", 1, dt)) {
-				while( this.pos.x < (futx-1)*10-5 )
-					this.pos.x++;
-			}
-			else {
-				this.pos.x += dt * this.stat.speed;
-			}
-		} catch(e) {
-			return;
+		var wallPos = this.checkWall(dt, {x : 1, y : 0});
+		if(!wallPos){
+			this.pos.x += dt * this.stat.speed;
+		} else {
+			this.pos.x = (wallPos.x) * 10 - 1;
 		}
-		this.update(dt);
-	}
-	Hero.prototype.isCollide = function(target, flag, direc, dt) {
-		var fut = parseInt((target + (direc * dt * this.stat.speed)) / 10);
-		var idx, wall;
 		
-		try {
-			if(flag == "up" || flag == "down") {
-				idx = parseInt(this.pos.x / 10);
-				wall = this.map.data[idx][fut];
-			}	
-			else {
-				idx = parseInt(this.pos.y / 10);
-				wall = this.map.data[fut][idx];
+		this.isMoveing = true;
+	}
+	Hero.prototype.checkWall = function(dt, direction){
+		var len = dt * this.stat.speed;
+		var nextPos = new Point();
+		nextPos.x = parseInt((this.pos.x + len * direction.x)/10);
+		nextPos.y = parseInt((this.pos.y + len * direction.y)/10);
+		
+		var currentPos = new Point();
+		currentPos.x = parseInt(this.pos.x/10);
+		currentPos.y = parseInt(this.pos.y/10);
+		
+		while(true){
+			if(direction.x > 0 || direction.y > 0){
+				if(currentPos.x > nextPos.x || currentPos.y > nextPos.y){
+					break;
+				}
+			} else if (direction.x < 0 || direction.y < 0){
+				if(currentPos.x < nextPos.x || currentPos.y < nextPos.y){
+					break;
+				}
 			}
 			
-			if(wall == 2)	return true;
-			else			return false;
+			if(this.map.data[currentPos.x][currentPos.y] == 2){
+				return currentPos;
+			}
 			
-		} catch(e) {
-			return true;		// if error occurs, don't go.
+			currentPos.x += direction.x;
+			currentPos.y += direction.y;
 		}
-		return false;			// normally, U can go.
+		return;
 	}
 	Hero.prototype.aimTo = function(vec){
 		this.flashLight.target.position.x = vec.x
