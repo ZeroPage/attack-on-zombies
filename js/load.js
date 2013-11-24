@@ -13,7 +13,8 @@ AudioContext = window.AudioContext || webkitAudioContext;
 			"/js/ResourceManager.js",
 			"/js/Window.js",
 			"/js/SoundEffect.js",
-			"/js/Gun.js"
+			"/js/Gun.js",
+			"/js/Bullet.js"
 		];
 		loadScripts(scripts, onReady);
 

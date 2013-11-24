@@ -39,22 +39,7 @@ function Game(width, height){
 	this.renderer.domElement.addEventListener("mousemove", function(e){
 		var x = e.x || e.clientX;
 		var y = e.y || e.clientY;
-		//TODO clean up
-		var vec = new THREE.Vector3(
-			(x/width) * 2 - 1,
-			-(y/height) * 2 + 1,
-			0
-		);
-		
-		var raycaster = projector.pickingRay(vec, that.camera);
-		var arr = raycaster.intersectObjects(that.map.objList);
-		
-		var min = arr[0];
-		for(var i = 0; i < arr.length; i++){
-			if(min.distance > arr[i].distance){
-				min = arr[i];
-			}
-		}
+		var min = mousePos(x, y);
 		if(min){
 			that.hero.aimTo(min.point);
 		}
@@ -89,12 +74,39 @@ function Game(width, height){
 	this.keyBinder.bindKey("P", function (dt) {
 		$statWindow.toggle();
 	}, false);
+	
+	this.keyBinder.bindKey("LBUTTON", function(dt, pos){
+		var min = mousePos(pos.x, pos.y);
+		if(min){
+			that.bullets.push(new Bullet(that.hero.model.position, min.point, that.scene, dt));
+		}
+	}, true);
+	that.bullets = [];
 		
 	this.clock = new THREE.Clock(true);
 	requestAnimationFrame(function () { that.loop() });
 
 	this.bgm = new SoundEffect("Background", true);	
 	this.bgm.play();
+	
+	function mousePos(x, y){
+		var vec = new THREE.Vector3(
+			(x/width) * 2 - 1,
+			-(y/height) * 2 + 1,
+			0
+		);
+		
+		var raycaster = projector.pickingRay(vec, that.camera);
+		var arr = raycaster.intersectObjects(that.map.objList);
+		
+		var min = arr[0];
+		for(var i = 0; i < arr.length; i++){
+			if(min.distance > arr[i].distance){
+				min = arr[i];
+			}
+		}
+		return min;
+	}
 }
 
 Game.prototype.loop = function(){
@@ -117,6 +129,10 @@ Game.prototype.move = function (dt) {
 	if(!this.hero)
 		return;
 
+	this.bullets.filter(function(item){
+		return item.move(dt);
+	});
+	
     if (this.hero.getPos().x < 1) { this.hero.right(dt); }
     else if (this.hero.getPos().y < 1) { this.hero.down(dt); }
     else if (this.hero.getPos().x > this.map.width * 10 - 1) { this.hero.left(dt); }
