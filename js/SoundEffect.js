@@ -1,41 +1,38 @@
-function SoundEffect(source){
-		
-	if(!window.audioContext){
-		audioContext = new webkitAudioContext;
-	}
-	
-	var that = this;	
-	that.source = source;
-	that.buffer = null;
-	that.isLoaded = false;
-	
-	var getSound = new XMLHttpRequest();
-	getSound.open("GET", that.source, true);
-	getSound.responseType = "arraybuffer";
-	getSound.onload = function(){
-		audioContext.decodeAudioData(getSound.response, function(buffer){
-			that.buffer = buffer;
-			that.isLoaded = true;			
-		});
-	}	
-	getSound.send();
-}
+//audio contex
+(function(global){
+	var audioContext = new AudioContext();
 
-SoundEffect.prototype.play = function(){
-	if(this.isLoaded === true){
+	function SoundEffect(name, loop){
+		this.buffer = new ResourceManager().getSound(name);
+		this.loop = loop;
+	
+		this.isPlay = false;		
+	}
+	SoundEffect.prototype.play = function(){
+		if(this.isPlay) return;
+		
+		var that = this;
+		
 		var playSound = audioContext.createBufferSource();
 		playSound.buffer = this.buffer;
 		playSound.loop = this.loop;
 		playSound.connect(audioContext.destination);
 		playSound.noteOn(0);
 		this.isPlay = true;
+
+		//playSound.onended = onEnd;
+		if(!this.loop){
+			setTimeout(onEnd, this.buffer.duration * 1000);	
+		}
+		
+		function onEnd(){
+			that.isPlay = false;
+		}
 	}
-}
-SoundEffect.prototype.stop = function(){
-	if(!this.playSound.stop)
-		this.playSound.stop = playSound.noteOff;
-	this.playSound.stop(0);
-	this.playSound.noteOff(0);
-	playSound.loop = false;
-	this.isPlay = false;
-}
+	
+	SoundEffect.decode = function(data, callback){
+		audioContext.decodeAudioData(data, callback);
+	}
+	global.SoundEffect = SoundEffect;
+})(this);
+

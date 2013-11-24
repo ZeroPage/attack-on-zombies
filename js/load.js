@@ -1,3 +1,4 @@
+AudioContext = window.AudioContext || webkitAudioContext;
 (function(){
 	window.onload = function(){
 		
@@ -24,7 +25,8 @@
 						Test : "models/editable-person.js"
 					},
 					sounds : {
-						
+						Background : "sound/Background.mp3",
+						Walk : "sound/Walk.mp3"
 					}
 				}, function(){
 				console.log("staring App...");

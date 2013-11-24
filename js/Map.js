@@ -526,7 +526,6 @@
     }
 
     //random algorithm_third
-    //��Ʈ���� ����.
     Map.prototype.random3 = function () {
         var spaceManager = new SpaceGraph();
 

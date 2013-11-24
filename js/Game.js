@@ -13,8 +13,6 @@ function Game(width, height){
 
 	var loader = new THREE.JSONLoader();
 	
-	
-	
 	this.map = new Map();
 	this.map.addMeshTo(this.scene);
 	
@@ -63,8 +61,7 @@ function Game(width, height){
 	});
 
 	this.keyBinder = new KeyBinder(document.body);	
-	that.walkSound = new SoundEffect("sound/Walk.mp3");
-	this.playing = true;
+	this.walkSound = new SoundEffect("Walk");
 
 	this.keyBinder.bindKey("A", function(dt){
 		var x = parseInt((that.hero.getPos().x+5) / 10);
@@ -74,10 +71,7 @@ function Game(width, height){
 		if(that.map.data[lx][y] != 2)
 			that.hero.left(dt);
 			
-		if(this.playing){
-			that.walkSound.play();
-		}
-		this.playing = !this.playing;
+		that.walkSound.play();
 	}, true); 
 	this.keyBinder.bindKey("D", function(dt){
 		var x = parseInt((that.hero.getPos().x-5) / 10);
@@ -86,10 +80,8 @@ function Game(width, height){
 		var rx = x+1;
 		if(that.map.data[rx][y] != 2)
 			that.hero.right(dt);
-		if(this.playing){
-			that.walkSound.play();
-		}
-		this.playing = !this.playing;
+		
+		that.walkSound.play();
 	}, true);
 	this.keyBinder.bindKey("W", function(dt){
 		var x = parseInt(that.hero.getPos().x / 10);
@@ -98,10 +90,8 @@ function Game(width, height){
 		var uy = y-1;
 		if(that.map.data[x][uy] != 2)
 			that.hero.up(dt);
-		if(this.playing){
-			that.walkSound.play();
-		}
-		this.playing = !this.playing;
+		
+		that.walkSound.play();
 	}, true);
 	this.keyBinder.bindKey("S", function(dt){
 		var x = parseInt(that.hero.getPos().x / 10);
@@ -110,10 +100,8 @@ function Game(width, height){
 		var dy = y+1;
 		if(that.map.data[x][dy] != 2)
 			that.hero.down(dt);
-		if(this.playing){
-			that.walkSound.play();
-		}
-		this.playing = !this.playing;
+		
+		that.walkSound.play();
 	}, true);
 
 	var $itemWindow = new Window("item");
@@ -129,7 +117,8 @@ function Game(width, height){
 	this.clock = new THREE.Clock(true);
 	requestAnimationFrame(function () { that.loop() });
 
-	this.bgm = new SoundEffect("sound/Background.mp3");	
+	this.bgm = new SoundEffect("Background", true);	
+	this.bgm.play();
 }
 
 Game.prototype.loop = function(){
@@ -137,10 +126,7 @@ Game.prototype.loop = function(){
 
 	this.keyBinder.check(dt);
 	this.move(dt);
-	if(!this.bgm.isPlay){
-		this.bgm.play();
-		this.bgm.loop = true;
-	}
+	
 	if(this.hero)
 		this.render(dt);
 

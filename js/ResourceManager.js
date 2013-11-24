@@ -43,16 +43,11 @@
 		function loadSound(name, path){
 			console.log("Load sound : " + name);
 			var ajax = new XMLHttpRequest();
-			var audioContext;
-			if(!window.audioContext){
-				audioContext = new webkitAudioContext;
-			} else {
-				console.error("can't find AudioContext!");
-			}
-			ajax.open("GET", that.source, true);
+			
+			ajax.open("GET", path, true);
 			ajax.responseType = "arraybuffer";
 			ajax.onload = function(){
-				audioContext.decodeAudioData(ajax.response, function(buffer){
+				SoundEffect.decode(ajax.response, function(buffer){
 					sounds[name] = buffer;
 					complete();
 				});

@@ -1,5 +1,5 @@
 (function (global){
-	function Hero(camera){
+	function Hero(camera, map){
 		var resourceManager = new ResourceManager();
 		
 		this.pos = new Point(0,0);
@@ -32,7 +32,7 @@
         
 		this.camera = camera;
 		this.stat = {};
-		this.stat.speed = 100;
+		this.stat.speed = 50;
 		
 		this.gun = new Gun();
 		this.gun.refill(100);
@@ -55,6 +55,7 @@
 		this.torch.position.z = this.pos.y;
 		this.modelLight.position.x = this.pos.x;
 		this.modelLight.position.z = this.pos.y;
+		//TODO target must move whe player move
 		//this.flashLight.target.position.x = this.pos.x;
 		//this.flashLight.target.position.z = this.pos.y;
 		
