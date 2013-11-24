@@ -26,7 +26,7 @@
 		"colorSpecular" : [0.0, 0.0, 0.0],
 		"depthTest" : true,
 		"depthWrite" : true,
-		"mapSpecular" : "char.png",
+		"mapDiffuse" : "char.png",
 		"shading" : "Lambert",
 		"specularCoef" : 50,
 		"transparency" : 1.0,

@@ -25,6 +25,7 @@
 			loader.load(path, function(geometry, material){
 				var material = new THREE.MeshFaceMaterial(material);
 				models[name] = new THREE.SkinnedMesh(geometry, material);
+				models[name].overdraw = true;
 				
 				//add animation to Handler
 				for(var i = 0; i < models[name].geometry.animations.length; i++){

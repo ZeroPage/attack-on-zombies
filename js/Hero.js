@@ -9,20 +9,18 @@
 		this.flashLight.shadowDarkness = 0.9;
 		this.flashLight.shadowCameraNear = 1;
 		this.flashLight.shadowCameraFov = 90;
-		this.flashLight.position.y = 3;
+		this.flashLight.position.y = 5;
 		this.flashLight.angle = (45/180) * Math.PI;
 		this.flashLight.distance = 130;
 
 		this.torch = new THREE.PointLight(0x00ff00, 0.5, 20);
-		this.torch.position.y = 10;
+		this.torch.position.y = 15;
 	
-		this.modelLight = new THREE.PointLight(0xffafff, 1, 10);
-		this.modelLight.position.y = 10;
+		this.modelLight = new THREE.PointLight(0xffafff, 1, 15);
+		this.modelLight.position.y = 15;
 
 		this.model = resourceManager.getModel("Hero");
-		this.model.castShadow = true;
-		this.model.receiveShadow = true;
-		this.model.position.y = 3;
+		this.model.position.y = 0;
 		
 		this.animation = new THREE.Animation(
     		this.model,
@@ -57,8 +55,8 @@
 		this.torch.position.z = this.pos.y;
 		this.modelLight.position.x = this.pos.x;
 		this.modelLight.position.z = this.pos.y;
-		this.flashLight.target.position.x = this.pos.x;
-		this.flashLight.target.position.z = this.pos.y;
+		//this.flashLight.target.position.x = this.pos.x;
+		//this.flashLight.target.position.z = this.pos.y;
 		
 		this.animation.update(dt * 100);
 	}
