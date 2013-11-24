@@ -63,6 +63,11 @@
 		this.animation.update(dt * 100);
 	}
 	Hero.prototype.up = function(dt){
+		var curx = parseInt(this.pos.x / 10);
+		var cury = parseInt(this.pos.y / 10);
+		
+		var futx = parseInt(this.pos.x / 10);
+		var futy = parseInt((this.pos.y - dt * this.stat.speed) / 10);
 		this.pos.y -= dt * this.stat.speed;
 		this.update(dt);
 	}
