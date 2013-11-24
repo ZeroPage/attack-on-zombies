@@ -3,6 +3,7 @@
 		var resourceManager = new ResourceManager();
 		
 		this.pos = new Point(0,0);
+		this.map = map;
 
 		this.flashLight = new THREE.SpotLight();
 		this.flashLight.castShadow = true;
@@ -62,20 +63,83 @@
 		this.animation.update(dt * 100);
 	}
 	Hero.prototype.up = function(dt){
-		this.pos.y -= dt * this.stat.speed;
+		var futy = parseInt((this.pos.y - dt * this.stat.speed) / 10);
+
+		if(this.isCollide(this.pos.y, "up", -1, dt)) {
+			while( this.pos.y > (futy+1)*10+5 )
+				this.pos.y--;
+		}
+		else {
+			this.pos.y -= dt * this.stat.speed;
+		}
 		this.update(dt);
 	}
 	Hero.prototype.down = function(dt){
-		this.pos.y += dt * this.stat.speed;
+		var futy = parseInt((this.pos.y + dt * this.stat.speed) / 10);
+		
+		if(this.isCollide(this.pos.y, "down", 1, dt)) {
+			while( this.pos.y < (futy-1)*10-5 )
+				this.pos.y++;
+		}
+		else {
+			this.pos.y += dt * this.stat.speed;
+		}
 		this.update(dt);
 	}
 	Hero.prototype.left = function(dt){
-		this.pos.x -= dt * this.stat.speed;
+		var futx = parseInt((this.pos.x - dt * this.stat.speed) / 10);
+
+		try {
+			if(this.isCollide(this.pos.x, "left", -1, dt)) {
+				while( this.pos.x > (futx+1)*10+5 )
+					this.pos.x--;
+			}
+			else {
+				this.pos.x -= dt * this.stat.speed;
+			}
+		} catch(e) {
+			return;
+		}
+		
 		this.update(dt);
 	}
 	Hero.prototype.right = function(dt){
-		this.pos.x += dt * this.stat.speed;
+		var futx = parseInt((this.pos.x + dt * this.stat.speed) / 10);
+
+		try {
+			if(this.isCollide(this.pos.x, "right", 1, dt)) {
+				while( this.pos.x < (futx-1)*10-5 )
+					this.pos.x++;
+			}
+			else {
+				this.pos.x += dt * this.stat.speed;
+			}
+		} catch(e) {
+			return;
+		}
 		this.update(dt);
+	}
+	Hero.prototype.isCollide = function(target, flag, direc, dt) {
+		var fut = parseInt((target + (direc * dt * this.stat.speed)) / 10);
+		var idx, wall;
+		
+		try {
+			if(flag == "up" || flag == "down") {
+				idx = parseInt(this.pos.x / 10);
+				wall = this.map.data[idx][fut];
+			}	
+			else {
+				idx = parseInt(this.pos.y / 10);
+				wall = this.map.data[fut][idx];
+			}
+			
+			if(wall == 2)	return true;
+			else			return false;
+			
+		} catch(e) {
+			return true;		// if error occurs, don't go.
+		}
+		return false;			// normally, U can go.
 	}
 	Hero.prototype.aimTo = function(vec){
 		this.flashLight.target.position.x = vec.x
@@ -98,7 +162,7 @@
 		this.update(0)
 	}
 	function ModelHandler(){
-		
+
 	}
 	global.Hero = Hero;
 })(this);

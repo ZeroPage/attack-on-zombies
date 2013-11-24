@@ -16,7 +16,7 @@ function Game(width, height){
 	this.map = new Map();
 	this.map.addMeshTo(this.scene);
 	
-	that.hero = new Hero(that.camera);
+	that.hero = new Hero(that.camera, this.map);
 	that.hero.addTo(that.scene);
 	that.hero.setPosition(that.map.getHeroXY());
 
@@ -64,43 +64,19 @@ function Game(width, height){
 	this.walkSound = new SoundEffect("Walk");
 
 	this.keyBinder.bindKey("A", function(dt){
-		var x = parseInt((that.hero.getPos().x+5) / 10);
-		var y = parseInt(that.hero.getPos().y / 10);
-		
-		var lx = x-1;
-		if(that.map.data[lx][y] != 2)
-			that.hero.left(dt);
-			
+		that.hero.left(dt);
 		that.walkSound.play();
 	}, true); 
 	this.keyBinder.bindKey("D", function(dt){
-		var x = parseInt((that.hero.getPos().x-5) / 10);
-		var y = parseInt(that.hero.getPos().y / 10);
-		
-		var rx = x+1;
-		if(that.map.data[rx][y] != 2)
-			that.hero.right(dt);
-		
+		that.hero.right(dt);
 		that.walkSound.play();
 	}, true);
 	this.keyBinder.bindKey("W", function(dt){
-		var x = parseInt(that.hero.getPos().x / 10);
-		var y = parseInt((that.hero.getPos().y+5) / 10);
-		
-		var uy = y-1;
-		if(that.map.data[x][uy] != 2)
-			that.hero.up(dt);
-		
+		that.hero.up(dt);
 		that.walkSound.play();
 	}, true);
 	this.keyBinder.bindKey("S", function(dt){
-		var x = parseInt(that.hero.getPos().x / 10);
-		var y = parseInt((that.hero.getPos().y-5) / 10);
-		
-		var dy = y+1;
-		if(that.map.data[x][dy] != 2)
-			that.hero.down(dt);
-		
+		that.hero.down(dt);
 		that.walkSound.play();
 	}, true);
 
