@@ -238,8 +238,8 @@
 				break;
 			}
         }
-		var x = parseInt((t_space[index].x)*10 + this.getRand(1, t_space[index].width)*10);
-		var y = parseInt((t_space[index].y)*10 + this.getRand(1, t_space[index].height)*10);
+		var x = parseInt((t_space[index].x)*10 + this.getRand(1, t_space[index].width/2)*10) + 5;
+		var y = parseInt((t_space[index].y)*10 + this.getRand(1, t_space[index].height/2)*10) + 5;
         return [x, y, index];
 	}
     Map.prototype.getHeroXY = function () {
@@ -248,7 +248,7 @@
             var index = this.getRand(0, t_space.length - 1);
 			var x = parseInt(((2*t_space[index].x) + t_space[index].width) / 2);
 			var y = parseInt(((2*t_space[index].y) + t_space[index].height) / 2);
-            if (this.data[y][x] == 1) {
+            if (this.data[x][y] == 1) {
                 this.hero_node = index;
                 break;
             }
