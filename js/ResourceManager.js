@@ -61,7 +61,7 @@
 		}
 	}
 	ResourceManager.prototype.getModel = function(name){
-		return models[name];
+		return new THREE.SkinnedMesh(models[name].geometry, models[name].material);
 	}
 	ResourceManager.prototype.getSound = function(name){
 		return sounds[name];

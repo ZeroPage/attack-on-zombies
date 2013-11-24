@@ -159,7 +159,7 @@
 	}
 	Hero.prototype.setPosition = function(pos){
 		this.pos = new Point(pos.x * 10 +5, pos.y * 10 + 5);
-		this.update(0)
+		this.update(0);
 	}
 	global.Hero = Hero;
 })(this);
