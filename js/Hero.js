@@ -103,5 +103,8 @@
 		this.pos = new Point(pos.x * 10 +5, pos.y * 10 + 5);
 		this.update(0)
 	}
+	function ModelHandler(){
+		
+	}
 	global.Hero = Hero;
 })(this);
