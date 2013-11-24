@@ -234,12 +234,14 @@
         var index;
         while (true) {
             index = this.getRand(0, t_space.length - 1);
-			if(this.hero_node != index) {
+			var x = parseInt(((2*t_space[index].x) + t_space[index].width) / 2);
+			var y = parseInt(((2*t_space[index].y) + t_space[index].height) / 2);
+			if((this.data[x][y] == 1)&&(this.hero_node != index)) {
 				break;
 			}
         }
-		var x = parseInt((t_space[index].x)*10 + this.getRand(1, t_space[index].width/2)*10) + 5;
-		var y = parseInt((t_space[index].y)*10 + this.getRand(1, t_space[index].height/2)*10) + 5;
+		x = (x * 10) + 5;
+		y = (y * 10) + 5;
         return [x, y, index];
 	}
     Map.prototype.getHeroXY = function () {
@@ -626,6 +628,15 @@
                 }
             }
         }
+		
+		for(var i=0; i<this.height; i++) {
+			for(var j=0; j<this.width; j++) {
+				var temp = this.data[i][j];
+				this.data[i][j] = this.data[j][i];
+				this.data[j][i] = temp;
+			}
+		}
+		
 		//consist of adjacency list
 		this.spaceManager.makeSpaceLinkedList();
         return true;

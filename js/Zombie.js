@@ -106,6 +106,7 @@
 		} else {
 			dy = 0;
 		}
+		
 		this.curX += dt*dx*this.speed;
 		this.curY += dt*dy*this.speed;
 		
@@ -115,7 +116,7 @@
     Zombie.prototype.action = function (dt, heroX, heroY) {
         
         //for Debug
-		this.chaseHero(dt, heroX, heroY);
+		//this.chaseHero(dt, heroX, heroY);
 		return;
         //end
         
