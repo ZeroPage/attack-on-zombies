@@ -15,7 +15,7 @@
 		this.flashLight.distance = 130;
 
 		this.torch = new THREE.PointLight(0x00ff00, 0.8, 20);
-		this.torch.position.y = 15;
+		this.torch.position.y = 5;
 		
 		this.modelLight = new THREE.SpotLight(0xffafff, 1, 120);
 		this.modelLight.position.y = 20;
@@ -24,7 +24,7 @@
 		//this.modelLight.position.y = 15;
 
 		this.model = resourceManager.getModel("Hero");
-		this.model.position.y = 0;
+		this.model.position.y = 3;
 		
 		this.animation = new THREE.Animation(
     		this.model,
