@@ -1,7 +1,6 @@
 (function (global) {
-
-    //var __gDebug__;
-
+	
+	//TODO : 열거형 상수들을 MAP 객체 안에 넣어야함. + 이에따른 코드 정리 필요(우선순위 하_중).
     var MAP_FEATURE = {
         NO_USE :        0,
         FLOOR :         1,
@@ -25,9 +24,7 @@
 
     function Map() {
         //enum//in this time, i just call 1, 2
-
-        this.xmax = 50;
-        this.ymax = 50;
+		this.hero_node = 0;
 
         this.xsize = 0;
         this.ysize = 0;
@@ -57,13 +54,13 @@
         this.y = y;
         this.width = w;
         this.height = h;
+        //node -> link [1, link index], link -> link [2, link index], link -> node [3, node index], node -> node [4, node index]
         this.nextSpace = new Array();
-        //this.isolated = true;
     };
     Space.prototype.addNextSpace = function (flag, index) {
-        if (flag > 3)
+        if (flag > 4)
             return;
-        this.nextSpace.push(flag, index);
+        this.nextSpace.push([flag, index]);
     }
 
     function SpaceGraph() {
@@ -76,11 +73,138 @@
             return;
         this.node.push(space);
     }
+	SpaceGraph.prototype.getNextSpace = function (curIndex, isNode) {
+		var sendIndex, sendX, sendY, sendFlag;
+		var t_space;
+		var count, randNum;
+		
+		// if current space is node, then get randomly next space data.
+		if(isNode) { 
+			count = this.node[curIndex].nextSpace.length - 1  < 0 ? 0 : this.node[curIndex].nextSpace.length;
+			if(count == 0) 
+				return null;
+			randNum = Math.floor(Math.random()*count);
+			sendFlag = this.node[curIndex].nextSpace[randNum][0];
+			sendIndex = this.node[curIndex].nextSpace[randNum][1];
+			if(sendFlag == 1) {
+				t_space = this.link[sendIndex];
+				sendFlag = false;
+			} else if(sendFlag == 4) {
+				t_space = this.node[sendIndex];
+				sendFlag = true;
+			} else {
+				console.log("what the hell in map->getNextSpace");
+			}
+			
+		} else { // if current space if link, then also get randomly next space data.
+			count = this.link[curIndex].nextSpace.length - 1  < 0 ? 0 : this.link[curIndex].nextSpace.length;
+			if(count == 0) 
+				return null;
+			randNum = Math.floor(Math.random()*count);
+			sendFlag = this.link[curIndex].nextSpace[randNum][0];
+			sendIndex = this.link[curIndex].nextSpace[randNum][1];
+			if(sendFlag == 2) {
+				t_space = this.link[sendIndex];
+				sendFlag = false;
+			} else if(sendFlag == 3) {
+				t_space = this.node[sendIndex];
+				sendFlag = true;
+			} else {
+				console.log("what the hell in map->getNextSpace");
+			}
+		}
+		sendX = (t_space.x + t_space.width) * (Math.floor(Math.random() * 5) + 2);
+		sendY = (t_space.y + t_space.height) * (Math.floor(Math.random() * 5) + 2);
+		return [sendX, sendY, sendIndex, sendFlag];
+	}
 
     SpaceGraph.prototype.addRoad = function (road) {
         if (!road)
             return;
         this.link.push(road);
+    }
+	// i don't know that how much this module effect to loading speed. so we will discuss about it and test it. -> can be done.
+	// i infer about 1000 hundred operation cost.
+	SpaceGraph.prototype.makeSpaceLinkedList = function () {
+		var NODE_TO_LINK = 1;
+		var LINK_TO_LINK = 2;
+		var LINK_TO_NODE = 3;
+		var NODE_TO_NODE = 4;
+        //node -> (node or link)
+		for(var i=0; i<this.node.length; i++) {
+			for(var j=0; j<this.node.length; j++) {
+				//north or south
+				if((this.node[i].y == (this.node[j].y + this.node[j].height)) || ((this.node[i].y + this.node[i].height) == this.node[j].y)) {
+					//
+					if((this.node[j].x >= this.node[i].x) && (this.node[j].x < (this.node[i].x + this.node[i].width))) {
+						this.node[i].addNextSpace(NODE_TO_NODE, j);
+						this.node[j].addNextSpace(NODE_TO_NODE, i);
+					}
+					else if((this.node[i].x >= this.node[j].x) && (this.node[i].x < (this.node[j].x + this.node[j].width))) {
+						this.node[i].addNextSpace(NODE_TO_NODE, j);
+						this.node[j].addNextSpace(NODE_TO_NODE, i);
+					}
+				}//west or east
+				else if((this.node[i].x == (this.node[j].x + this.node[j].width)) || ((this.node[i].x + this.node[i].width) == this.node[j].x)) {
+					if((this.node[j].y >= this.node[i].y) && (this.node[j].y < (this.node[i].y + this.node[i].height))) {
+						this.node[i].addNextSpace(NODE_TO_NODE, j);
+						this.node[j].addNextSpace(NODE_TO_NODE, i);
+					}
+					else if((this.node[i].y >= this.node[j].y) && (this.node[i].y < (this.node[j].y + this.node[j].height))) {
+						this.node[i].addNextSpace(NODE_TO_NODE, j);
+						this.node[j].addNextSpace(NODE_TO_NODE, i);
+					}
+				}
+			}
+			for(var k=0; k<this.link.length; k++) {
+				//north or south
+				if((this.node[i].y == (this.link[k].y + 1)) || ((this.node[i].y + this.node[i].height) == this.link[k].y)) {
+					if((this.link[k].x >= this.node[i].x) && (this.link[k].x < (this.node[i].x + this.node[i].width))) { 
+						this.node[i].addNextSpace(NODE_TO_LINK, k);
+						this.link[k].addNextSpace(LINK_TO_NODE, i);
+					}
+				}//west or east
+				else if((this.node[i].x == (this.link[k].x + 1)) || ((this.node[i].x + this.node[i].width) == this.link[k].x)) {
+					if((this.link[k].y >= this.node[i].x) && (this.link[k].y < (this.node[i].x + this.node[i].width))) {
+						this.node[i].addNextSpace(NODE_TO_LINK, k);
+						this.link[k].addNextSpace(LINK_TO_NODE, i);
+					}
+				}
+			}
+		}
+		//link -> (node or link)
+		for(var i=0; i<this.link.length; i++) {
+			for(var j=0; j<this.node.length; j++) {
+				//north or south
+				if((this.link[i].y == (this.node[j].y + this.node[j].height)) || ((this.link[i].y + 1) == this.node[j].y)) {
+					if((this.link[i].x >= this.node[j].x) && (this.link[i].x < (this.node[j].x + this.node[j].width))) {
+						this.link[i].addNextSpace(LINK_TO_NODE, j);
+						this.node[j].addNextSpace(NODE_TO_LINK, i);
+					}
+				}//west or east
+				else if((this.link[i].x == (this.node[j].x + this.node[j].width)) || ((this.link[i].x + 1) == this.node[j].x)) {
+					if((this.link[i].y >= this.node[j].y) && (this.link[i].y < (this.node[j].y + this.node[j].width))) {
+						this.link[i].addNextSpace(LINK_TO_NODE, j);
+						this.node[j].addNextSpace(NODE_TO_LINK, i);
+					}
+				}
+			}
+			for(var k=0; k<this.link.length; k++) {
+				//north or south
+				if((this.link[i].y == (this.link[k].y + 1)) || ((this.link[i].y + 1) == this.link[k].y)) {
+					if(this.link[i].x == this.link[k].x) {
+						this.link[i].addNextSpace(LINK_TO_LINK, k);
+						this.link[k].addNextSpace(LINK_TO_LINK, i);
+					}
+				}//west or east
+				else if((this.link[i].x == (this.link[k].x + 1)) || ((this.link[i].x + 1) == this.link[k].x)) {
+					if(this.link[i].y == this.link[k].y) {
+						this.link[i].addNextSpace(LINK_TO_LINK, k);
+						this.link[k].addNextSpace(LINK_TO_LINK, i);
+					}
+				}
+			}
+		}
     }
     
     Map.prototype.setCell = function (x, y, celltype) {
@@ -105,20 +229,33 @@
             i = -i;
         return min + i;
     }
+	Map.prototype.getMonsterPos = function() {
+		var t_space = this.spaceManager.node;
+        var index;
+        while (true) {
+            index = this.getRand(0, t_space.length - 1);
+			var x = parseInt(((2*t_space[index].x) + t_space[index].width) / 2);
+			var y = parseInt(((2*t_space[index].y) + t_space[index].height) / 2);
+			if((this.data[x][y] == 1)&&(this.hero_node != index)) {
+				break;
+			}
+        }
+		x = (x * 10) + 5;
+		y = (y * 10) + 5;
+        return [x, y, index];
+	}
     Map.prototype.getHeroXY = function () {
         var t_space = this.spaceManager.node;
         while (true) {
             var index = this.getRand(0, t_space.length - 1);
-			var x = parseInt((t_space[index].x + t_space[index].width) / 2);
-			var y = parseInt((t_space[index].y + t_space[index].height) / 2);
+			var x = parseInt(((2*t_space[index].x) + t_space[index].width) / 2);
+			var y = parseInt(((2*t_space[index].y) + t_space[index].height) / 2);
             if (this.data[x][y] == 1) {
+                this.hero_node = index;
                 break;
             }
         }
         return new Point(x, y);
-    }
-    Map.prototype.makeSpaceLinkedList = function () {
-        
     }
     Map.prototype.makeCorridor = function (x, y, length, direction) {
         var len = this.getRand(MAP_SIZE.CORRIDOR_MIN_LENGTH, length);
@@ -233,8 +370,12 @@
                 }
                 //Debug
                 //console.log(this.spaceManager.node.length +"-> x : " + (x - parseInt(xlen / 2) + 1) +" y : "+ (parseInt(y - ylen) + 2) +" xlen : "+ (xlen - 2) +" ylen : "+ (ylen - 2));
-
-                var t_space = new Space(x - parseInt(xlen / 2) + 1, parseInt(y - ylen) + 2, xlen - 2, ylen - 2); // can be error so check this value
+				
+				var t_x = x - parseInt(xlen/2) + 1;
+				var t_y = parseInt(y - ylen + 1) + 1;
+				var t_width = parseInt((xlen+1)/2) + parseInt(xlen/2) - 1;
+				var t_height = y - parseInt(y - ylen + 1) - 1;
+                var t_space = new Space(t_x, t_y, t_width, t_height); // can be error so check this value
                 this.spaceManager.addSpace(t_space);
                 break;
             case 1:
@@ -257,8 +398,11 @@
                 }
                 //Debug
                 //console.log(this.spaceManager.node.length + "-> x : " + (x + 1) + " y : " + (y - parseInt(ylen/2) + 1) + " xlen : " + (xlen - 2) + " ylen : " + (ylen - 2));
-
-                var t_space = new Space(x + 1 , y - parseInt(ylen/2) + 1, xlen - 2, ylen - 2); // can be error so check this value
+				var t_x = x + 1;
+				var t_y = y - parseInt(ylen/2) + 1;
+				var t_width = parseInt(x+xlen-1) - x - 1;
+				var t_height = parseInt((ylen - 1)/2) + parseInt(ylen/2) - 1;
+                var t_space = new Space(t_x, t_y, t_width, t_height); // can be error so check this value
                 this.spaceManager.addSpace(t_space);
                 break;
             case 2:
@@ -281,8 +425,11 @@
                 }
                 //Debug
                 //console.log(this.spaceManager.node.length + "-> x : " + (x - parseInt(xlen/2) + 1) + " y : " + (y + 1) + " xlen : " + (xlen - 2) + " ylen : " + (ylen - 2));
-
-                var t_space = new Space(x - parseInt(xlen/2) + 1, y + 1, xlen - 2, ylen - 2); // can be error so check this value
+				var t_x = x - parseInt(xlen / 2) + 1;
+				var t_y = y + 1;
+				var t_width = parseInt((xlen - 1)/2) + parseInt(xlen/2) - 1;
+				var t_height = ylen - 2;
+                var t_space = new Space(t_x, t_y, t_width, t_height); // can be error so check this value
                 this.spaceManager.addSpace(t_space);
                 break;
             case 3:
@@ -305,8 +452,11 @@
                 }
                 //Debug
                 //console.log(this.spaceManager.node.length + "-> x : " + (parseInt(x - xlen) + 2) + " y : " + (y - parseInt(ylen / 2) + 1) + " xlen : " + (xlen - 2) + " ylen : " + (ylen - 2));
-
-                var t_space = new Space(parseInt(x-xlen) + 2, y - parseInt(ylen / 2) + 1, xlen - 2, ylen - 2); // can be error so check this value
+				var t_x = parseInt(x-xlen+1) + 1;
+				var t_y = y - parseInt(ylen / 2) + 1;
+				var t_width = x - parseInt(x-xlen+1) - 1;
+				var t_height = parseInt((ylen-1)/2) + parseInt(ylen/2) - 1;
+                var t_space = new Space(t_x, t_y, t_width, t_height); // can be error so check this value
                 this.spaceManager.addSpace(t_space);
                 break;
         }
@@ -318,11 +468,11 @@
         else this.objects = inobj;
  
         if (inx < 3) this.xsize = 3;
-        else if (inx > this.xmax) this.xsize = this.xmax;
+        else if (inx > this.width) this.xsize = this.width;
         else this.xsize = inx;
  
         if (iny < 3) this.ysize = 3;
-        else if (iny > this.ymax) this.ysize = this.ymax;
+        else if (iny > this.height) this.ysize = this.height;
         else this.ysize = iny;
  
         var xsize = this.xsize;
@@ -341,7 +491,6 @@
             }
         }
         this.makeRoom(parseInt(xsize/2), parseInt(ysize/2), MAP_SIZE.ROOM_MAX_WIDTH, MAP_SIZE.ROOM_MIN_HEIGHT, this.getRand(0,3));
-        
        // __gDebug__ = "createDungun->CenterRoom";
 
         var currentFeatures = 1;
@@ -438,7 +587,7 @@
         while (state != 10){
             for (var testing = 0; testing < 1000; testing++){
                 newx = this.getRand(1, xsize-1);
-                newy = this.getRand(1, ysize-2); //cheap bugfix, pulls down newy to 0<y<24, from 0<y<25
+                newy = this.getRand(1, ysize-2); 
                 ways = 4; //the lower the better
                 if (this.getCell(newx, newy+1) == MAP_FEATURE.FLOOR || this.getCell(newx, newy+1) == MAP_FEATURE.CORRIDOR){
                     //north
@@ -479,6 +628,17 @@
                 }
             }
         }
+		
+		for(var i=0; i<this.height; i++) {
+			for(var j=0; j<this.width; j++) {
+				var temp = this.data[i][j];
+				this.data[i][j] = this.data[j][i];
+				this.data[j][i] = temp;
+			}
+		}
+		
+		//consist of adjacency list
+		this.spaceManager.makeSpaceLinkedList();
         return true;
     }
 
@@ -524,7 +684,8 @@
         var list = [a, b];
         this.adjList.push(list);
     }
-
+	
+/*
     //random algorithm_third
     Map.prototype.random3 = function () {
         var spaceManager = new SpaceGraph();
@@ -579,6 +740,7 @@
             count--;
         }
     }
+*/
 
 	Map.prototype.addMeshTo = function(scene){
 		for(var i =0; i < this.data.length; i++){
