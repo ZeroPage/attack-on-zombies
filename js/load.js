@@ -30,7 +30,8 @@ AudioContext = window.AudioContext || webkitAudioContext;
 					},
 					sounds : {
 						Background : "sound/Background.mp3",
-						Walk : "sound/Walk.mp3"
+						Walk : "sound/Walk.mp3",
+						Bullet : "sound/Bullet.mp3"
 					}
 				}, function(){
 				console.log("staring App...");
