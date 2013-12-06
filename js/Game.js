@@ -86,11 +86,14 @@ function Game(width, height){
 		$statWindow.toggle();
 	}, false);
 	
+	this.bulletSound = new SoundEffect("Bullet");
+	
 	this.keyBinder.bindKey("LBUTTON", function(dt, pos){
 		var min = mousePos(pos.x, pos.y);
 		if(min){
 			that.bullets.push(new Bullet(that.hero.model.position, min.point, that.scene, dt));
 		}
+		that.bulletSound.play();
 	}, true);
 	that.bullets = [];
 		
