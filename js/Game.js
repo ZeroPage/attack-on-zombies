@@ -97,8 +97,8 @@ function Game(width, height){
 	this.clock = new THREE.Clock(true);
 	requestAnimationFrame(function () { that.loop() });
 
-	this.bgm = new SoundEffect("Background", true);	
-	this.bgm.play();
+	this.bgm = new SoundEffect("Background", false);	
+	//this.bgm.play();
 	
 	function mousePos(x, y){
 		var vec = new THREE.Vector3(

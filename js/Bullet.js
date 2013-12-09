@@ -1,6 +1,6 @@
-function Bullet(from, to, scene, dt){
+function Bullet(from, to, scene, dt, map){
     var geometry = new THREE.Geometry();
-    
+    this.map = map;
     var deltaVec = new THREE.Vector3();
     deltaVec.x = to.x - from.x;
     deltaVec.y = 0;
@@ -33,6 +33,7 @@ function Bullet(from, to, scene, dt){
 }
 
 Bullet.prototype.move = function(dt){
+    
     //움직이기
     this.line.position.x += this.deltaVec.x * this.speed * dt;
     this.line.position.y += this.deltaVec.y * this.speed * dt;
