@@ -24,6 +24,7 @@
             return;
         this.node.push(space);
     }
+	//may be need to some repairing.
 	SpaceGraph.prototype.getNextSpace = function (curIndex, isNode) {
 		var sendIndex, sendX, sendY, sendFlag;
 		var t_space;
@@ -72,8 +73,71 @@
 		//TODO 
 	}
 	SpaceGraph.prototype.getPath = function(curSpaceIndex, curIsNode, pos){
-		//TODO
-		//return space []
+		var to_index = searchSpace(pos);
+		 
+		var from = curIsNode ? this.node[curSpaceIndex] : this.link[curSpaceIndex];
+		var to = to_index.isNode ? this.node[to_index.index] : this.link[to_index.index];
+		
+		var nearNode = [];
+		
+		//if hero and zombie is in the same space 
+		if((curSpaceIndex == to_index.index) && (curIsNode == to_index.isNode)) {
+			return nearNode;
+		}
+		
+		//first next space setting in nearNode
+		for(var i=0; i<from.nextSpace.length; i++) {
+			var isNextNode = from.nextSpace[i][0] >= 3 ? true : false;
+			nearNode.push(new Array({
+				index : from.nextSpace[i][1],
+				isNode : isNextNode
+			}));	
+		}
+		//near node를 찿고 경로가 여러군데에서 연결되어있으면 분기해서 nearNode에 추가한다.
+		//nearNode를 모두 순회하면서 목적지와 인덱스, 노드여부가 같으면 루프를 빠져나와서 path를 리턴한다.
+		var step = 0;
+		while(1)
+		{
+			step++;
+			var curNearNodeLen = nearNode.length;
+			for(var i=0; i < curNearNodeLen; i++) {
+				var path = nearNode.shift();
+				var pathEnd = path[path.length - 1];
+				if(pathEnd.index == to_index.index) {
+					return path; 
+				} else {
+					var lastSpace = pathEnd.isNode >= 3 ? this.node[pathEnd.index] : this.link[pathEnd.index]];
+					for(var k=0; k<lastSpace.nextSpace.length; k++) {
+						var temp = path;
+						var addingisNode = lastSpace.nextSpace[0] >= 3 ? true : false;
+						if(pathEnd.index != lastSpace.nextSpace[1] || pathEnd.isNode != addingisNode)
+						{
+							temp.push({
+								index : lastSpace.nextSpace[1],
+								isNode : addingisNode
+							});
+							nearNode.push(temp);
+						}
+					}	
+				}
+			}
+			if(step == 20) {
+				return;
+			}
+		}
+	}
+	
+	SpaceGraph.prototype.searchSpace = function (pos) {
+		for(var i=0; i<this.node.length; i++) {
+			if((this.node[i].x =< pos.x && this.node[i].y =< pos.y) && ((this.node[i].x + this.node[i].width) > pos.x && (this.node[i].y + this.node[i].height) =< pos.y)) {
+				return {index : i, isNode : true};	
+			}
+		}
+		for(var i=0; i<this.link.length; i++) {
+			if((this.link[i].x =< pos.x && this.link[i].y =< pos.y) && ((this.link[i].x + this.link[i].width) > pos.x && (this.link[i].y + this.link[i].height) > pos.y)) {
+				return {index : i, isNode : false};
+			}
+		}
 	}
 
     SpaceGraph.prototype.addRoad = function (road) {
