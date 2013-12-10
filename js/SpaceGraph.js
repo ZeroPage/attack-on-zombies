@@ -67,6 +67,10 @@
 		sendY = (t_space.y + t_space.height) * (Math.floor(Math.random() * 5) + 2);
 		return [sendX, sendY, sendIndex, sendFlag];
 	}
+	SpaceGraph.prototype.getConnectionPoint = function(curSpaceIndex, nextSpaceIndex, curSpaceType, nextSpaceType)
+	{
+		//TODO 
+	}
 
     SpaceGraph.prototype.addRoad = function (road) {
         if (!road)

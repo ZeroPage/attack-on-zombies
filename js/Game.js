@@ -152,12 +152,16 @@ Game.prototype.render = function(dt){
 	this.renderer.render(this.scene, this.camera);
 }
 Game.prototype.move = function (dt) {
-
+	var that = this;
 	if(!this.hero)
 		return;
 
 	this.bullets.filter(function(item){
 		return item.move(dt);
+	});
+	
+	this.zombie.forEach(function(elem){
+		elem.move(dt, that.hero);
 	});
 	
     if (this.hero.getPos().x < 1) { this.hero.right(dt); }

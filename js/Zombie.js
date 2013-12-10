@@ -3,13 +3,7 @@
     var ZOMBIE_FEEL_RANGE = 150;
     
     function Zombie(map) {
-        this.ZOMBIE_FEEL = {
-            STAND   :   1,
-            MOVE    :   2,
-            CHASE   :   3,
-            ATTACK  :   4
-        };
-        
+                
         var resourceManager = new ResourceManager();
         
         this.model = resourceManager.getModel("Zombie");
@@ -22,114 +16,34 @@
         this.hp = 100;
         this.speed = 10;
         
-        //move way to info
-        this.isDestinationNode = false;
-        this.destinationIndex = -1;
-        this.destinationX = -1;
-        this.destinationY = -1;
+        this.wayPoint = []; // element is point
         
         //now position info
-        this.curNodeIndex = -1;
+		
+		this.currentNode = {
+			index : -1,
+			isNode : true
+		}
+		
         this.curX = -1;
         this.curY = -1;
-        
-        //prev position info
-        this.oldNodeIndex = -1;
-        this.oldX = -1;
-        this.oldY = -1;
-        
-        this.isCurNode = true; 
-        this.curState = this.ZOMBIE_FEEL.STAND;
     }
     
     Zombie.prototype.addTo = function (scene) {
         scene.add(this.model);
     }
     
-    Zombie.prototype.updateState = function (heroX, heroY) {
-        var interval = parseInt(Math.sqrt(Math.pow(heroX - this.curX, 2) + Math.pow(heroY - this.curY, 2)));
-        
-        //if hero is in zombie feeling range, then turn zombie state to chase mode.
-        if(interval < ZOMBIE_FEEL_RANGE) {
-            this.curState = this.ZOMBIE_FEEL.CHASE;
-        }else if(this.curState == this.ZOMBIE_FEEL.STAND) {
-            if(Math.floor(Math.random() * 10) < 5){
-                var desInfo = this.map.spaceManager.getNextSpace(this.curNodeIndex, this.isCurNode);
-                if(desInfo == null) return;
-                this.curState = this.ZOMBIE_FEEL.MOVE;
-                this.destinationX = desInfo[0];
-                this.destinationY = desInfo[1];
-                this.destinationIndex = desInfo[2];
-                this.isDestinationNode = desInfo[3];
-            }
-        }else if(this.curState == this.ZOMBIE_FEEL.MOVE) {
-            if(this.isArriveDestination()) {
-            	//if()        
-            }
-        }else if(this.curState == this.ZOMBIE_FEEL.CHASE) {
-			
-		}else if(this.curState == this.ZOMBIE_FEEL.ATTACK) {
-			
-			this.curState = this.ZOMBIE_FEEL.CHASE;
-		}
-    }
-    
-    Zombie.prototype.isArriveDestination = function () {
-        var lenToDes = parseInt(Math.sqrt(Math.pow(this.destinationX - this.curX, 2) + Math.pow(this.destinationY - this.curY, 2)));
-        if(lenToDes < 1) {
-            return true;
-        }else{
-            return false;
-        }
-    }
-    
-    Zombie.prototype.moveAround = function (dt) {
-        
-    }
-    
-    Zombie.prototype.chaseHero = function (dt, heroX, heroY) {
-       	var dx, dy;
-		var vx = parseInt(heroX - this.curX); 
-		var vy = parseInt(heroY - this.curY);
-		if(vx > 0) {
-			dx = 1;
-		} else if(vx < 0) {
-			dx = -1;
-		} else {
-			dx = 0;
-		}
-		
-		if(vy > 0) {
-			dy = 1;
-		} else if(vy < 0) {
-			dy = -1;
-		} else {
-			dy = 0;
-		}
-		
-		this.curX += dt*dx*this.speed;
-		this.curY += dt*dy*this.speed;
-		
-		//TODO : change the current node info.
-    }
-    
-    Zombie.prototype.action = function (dt, heroX, heroY) {
-        var zombieAction = this.curState;
-        if(zombieAction == this.ZOMBIE_FEEL.MOVE) {
-            this.moveAround(dt);
-        } else if(zombieAction == this.ZOMBIE_FEEL.CHASE) {
-            this.chaseHero(dt, heroX, heroY);
-        }
-    }
+    Zombie.prototype.isHeroNearBy = function(hero)
+	{
+		var pos = hero.getPos();
+		var interval = parseInt(Math.sqrt(Math.pow(pos.x - this.curX, 2) + Math.pow(pos.y - this.curY, 2)));
+        return interval < ZOMBIE_FEEL_RANGE;
+	}
     
     Zombie.prototype.setPosition = function (x, y, index) {
-        this.oldX = this.curX;
-        this.oldY = this.curY;
-        this.oldNodeIndex = this.curNodeIndex;
-        
         this.curX = x;
         this.curY = y;
-        this.curNodeIndex = index;
+        this.currentNode.index = index;
     }
     
     Zombie.prototype.getCurX = function () {
@@ -141,27 +55,54 @@
     Zombie.prototype.getCurNodeIndex = function () {
         return this.curNodeIndex;
     }
-    Zombie.prototype.getOldX = function () {
-        return this.oldX;
-    }
-    Zombie.prototype.getOldY = function () {
-        return this.oldY;
-    }
-    Zombie.prototype.getOldNodeIndex = function () {
-        return this.oldNodeIndex;
-    }
+   
+   	Zombie.prototype.move = function(dt, hero)
+	{
+		if(this.isHeroNearBy())
+		{
+			//TODO : 
+			// 1. zombie chase hero.
+			// 2. reset waypoint
+			// 3. hero 위치로 waypoint 설정
+		}
+		else if(this.wayPoint.length == 0)
+		{
+			var spaceArr = this.map.spaceManager.getNextSpace(this.currentNode.index, this.currentNode.isNode);	
+			var isNode = spaceArr[3] >=3 ? true : false;
+			var connectionPoint = this.map.spaceManager.getConnectionPoint(this.currentNode.index, spaceArr[2], this.currentNode.isNode, isNode);
+			//way point 갱신
+			this.wayPoint.push({
+				x : connectionPoint.x,
+				y : connectionPoint.y,
+				index : spaceArr[2],
+				isNode : isNode
+			});
+			this.wayPoint.push({
+				x : spaceArr[0],
+				y : spaceArr[1],
+				index : spaceArr[2],
+				isNode : isNode
+			});
+		}
+		//이동
+	}
     
     Zombie.prototype.update = function (dt, hero) {
 		var pos = hero.getPos();
-        //zombie state update
-        this.updateState(pos.x, pos.y);
+      
         //move update
-        this.action(dt, pos.x, pos.y);
+		this.move(dt, hero);
 		
+		//나중에 뺄것같음
 		this.model.position.x = this.curX;
 		this.model.position.z = this.curY;
-	
     }
+    
+    //벽 충돌
+	
+	//좀비 공격
+	
+	//좀비 ai
     
     global.Zombie = Zombie;
 })(this);
