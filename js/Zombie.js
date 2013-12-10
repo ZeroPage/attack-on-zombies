@@ -53,17 +53,43 @@
         return this.curY;
     }
     Zombie.prototype.getCurNodeIndex = function () {
-        return this.curNodeIndex;
+        return this.currentNode.index;
     }
    
    	Zombie.prototype.move = function(dt, hero)
 	{
 		if(this.isHeroNearBy())
 		{
-			//TODO : 
-			// 1. zombie chase hero.
-			// 2. reset waypoint
-			// 3. hero 위치로 waypoint 설정
+			var pos = hero.getPos();
+			// 1. reset waypoint
+			this.wayPoint = [];
+			// 2. hero 위치로 waypoint 설정
+			var spaceList = this.map.spaceManager.getPath(this.currentNode.index, this.currentNode.isNode, pos);
+			
+			if(spaceList.length == 0){
+				this.wayPoint.push({
+					x : pos.x,
+					y : pos.y,
+					index : this.currentNode.index,
+					isNode : this.currentNode.isNode
+				});
+				
+			} else {
+				var from = this.currentNode;
+				var to = spaceList[0];
+				for(var i = 0; i < spaceList.length - 1; i++){
+					
+					var connectionPoint = this.map.spaceManager.getConnectionPoint(from.index, to.index, from.isNode, to.isNode);
+					this.wayPoint.push({
+						x : connectionPoint.x,
+						y : connectionPoint.y,
+						index : to.index,
+						isNode : to.isNode
+					});
+					from = spaceList[i];
+					to = spaceList[i+1];
+				}
+			}
 		}
 		else if(this.wayPoint.length == 0)
 		{
@@ -115,12 +141,5 @@
 		this.model.position.x = this.curX;
 		this.model.position.z = this.curY;
     }
-    
-    //벽 충돌
-	
-	//좀비 공격
-	
-	//좀비 ai
-    
     global.Zombie = Zombie;
 })(this);

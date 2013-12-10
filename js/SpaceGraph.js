@@ -71,6 +71,10 @@
 	{
 		//TODO 
 	}
+	SpaceGraph.prototype.getPath = function(curSpaceIndex, curIsNode, pos){
+		//TODO
+		//return space []
+	}
 
     SpaceGraph.prototype.addRoad = function (road) {
         if (!road)
