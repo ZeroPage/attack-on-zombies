@@ -69,7 +69,53 @@
 	}
 	SpaceGraph.prototype.getConnectionPoint = function(curSpaceIndex, nextSpaceIndex, curSpaceType, nextSpaceType)
 	{
-		//TODO 
+		var from = curSpaceType ? this.node[curSpaceIndex] : this.link[curSpaceIndex];
+		var to = nextSpaceType ? this.node[nextSpaceIndex] : this.link[nextSpaceIndex];
+		
+		if(from.x == to.x + to.width){
+			//left
+			var y = getMidPoint(
+				from.y,
+				from.y + from.height,
+				to.y,
+				to.y + to.height
+			);
+			return {x : from.x, y: y};
+		} else if(from.x + from.width == to.x){
+			//right
+			var y = getMidPoint(
+				from.y,
+				from.y + from.height,
+				to.y,
+				to.y + to.height
+			);
+			return {x : to.x, y: y};
+		} else if(from.y == to.y + to.height){
+			//up
+			var x = getMidPoint(
+				from.x,
+				from.x + from.width,
+				to.x, 
+				to.x + to.width
+			)
+			return {x : x, y : form.y};
+		} else if(from.y + from.height == to.y){
+			//down
+			var x = getMidPoint(
+				from.x,
+				from.x + from.width,
+				to.x, 
+				to.x + to.width
+			)
+			return {x : x, y : to.y};
+		}
+		
+		function getMidPoint(a, b, c, d){
+			var tmp =[a,b,c,d].sort(function(a, b){
+				return a-b;
+			});
+			return (tmp[1] + tmp[2])/2;
+		}
 	}
 	SpaceGraph.prototype.getPath = function(curSpaceIndex, curIsNode, pos){
 		//TODO
