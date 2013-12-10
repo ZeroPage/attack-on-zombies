@@ -85,6 +85,24 @@
 			});
 		}
 		//이동
+		if(this.wayPoint.length == 0) { throw "not the hell"}
+		
+		var delta = new THREE.Vector2();
+		delta.x = this.wayPoint[0].x - this.curX;
+		delta.y = this.wayPoint[0].y - this.curY;
+		
+		delta.normalize();
+		
+		this.curX += delta.x * this.speed * dt;
+		this.curY += delta.y * this.speed * dt;
+		
+		if(delta.x * (this.wayPoint[0].x - this.curX) < 0){
+			//지나감
+			var node = this.wayPoint.shift();
+			this.curX = node.x;
+			this.curY = node.y;
+			this.currentNode = node;
+		} 
 	}
     
     Zombie.prototype.update = function (dt, hero) {
