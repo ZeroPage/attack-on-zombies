@@ -95,7 +95,9 @@
 		}
 		else if(this.wayPoint.length == 0)
 		{
-			var spaceArr = this.map.spaceManager.getNextSpace(this.currentNode.index, this.currentNode.isNode);	
+			var spaceArr = this.map.spaceManager.getNextSpace(this.currentNode.index, this.currentNode.isNode);
+			//FIXME
+			if(!spaceArr) return;
 			var isNode = spaceArr[3] >=3 ? true : false;
 			var connectionPoint = this.map.spaceManager.getConnectionPoint(this.currentNode.index, spaceArr[2], this.currentNode.isNode, isNode);
 			//way point 갱신

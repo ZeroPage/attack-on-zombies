@@ -5,7 +5,7 @@
         this.y = y;
         this.width = w;
         this.height = h;
-        //node -> link [1, link index], link -> link [2, link index], link -> node [3, node index], node -> node [4, node index]
+        this.type;
         this.nextSpace = new Array();
     };
     Space.prototype.addNextSpace = function (flag, index) {
@@ -22,6 +22,7 @@
     SpaceGraph.prototype.addSpace = function (space) {
         if (!space)
             return;
+		space.type = "node";
         this.node.push(space);
     }
 	//may be need to some repairing.
@@ -81,7 +82,7 @@
 				to.y,
 				to.y + to.height
 			);
-			return {x : from.x, y: y};
+			return {x : from.x * 10, y: y * 10};
 		} else if(from.x + from.width == to.x){
 			//right
 			var y = getMidPoint(
@@ -90,7 +91,7 @@
 				to.y,
 				to.y + to.height
 			);
-			return {x : to.x, y: y};
+			return {x : to.x * 10, y: y * 10};
 		} else if(from.y == to.y + to.height){
 			//up
 			var x = getMidPoint(
@@ -99,7 +100,7 @@
 				to.x, 
 				to.x + to.width
 			)
-			return {x : x, y : from.y};
+			return {x : x * 10, y : from.y * 10};
 		} else if(from.y + from.height == to.y){
 			//down
 			var x = getMidPoint(
@@ -108,7 +109,7 @@
 				to.x, 
 				to.x + to.width
 			)
-			return {x : x, y : to.y};
+			return {x : x * 10, y : to.y * 10};
 		}
 		throw "not have connect Point";
 		function getMidPoint(a, b, c, d){
@@ -119,6 +120,8 @@
 		}
 	}
 	SpaceGraph.prototype.getPath = function(curSpaceIndex, curIsNode, pos){
+		return;
+		
 		var to_index = this.searchSpace(pos);
 		 
 		var from = curIsNode ? this.node[curSpaceIndex] : this.link[curSpaceIndex];
@@ -139,6 +142,7 @@
 				isNode : isNextNode
 			}));	
 		}
+		
 		//near node를 찿고 경로가 여러군데에서 연결되어있으면 분기해서 nearNode에 추가한다.
 		//nearNode를 모두 순회하면서 목적지와 인덱스, 노드여부가 같으면 루프를 빠져나와서 path를 리턴한다.
 		var step = 0;
@@ -152,7 +156,8 @@
 				if(pathEnd.index == to_index.index) {
 					return path; 
 				} else {
-					var lastSpace = pathEnd.isNode >= 3 ? this.node[pathEnd.index] : this.link[pathEnd.index];
+					console.log(pathEnd.index);
+					var lastSpace = pathEnd.isNode ? this.node[pathEnd.index] : this.link[pathEnd.index];
 					for(var k=0; k<lastSpace.nextSpace.length; k++) {
 						var temp = path;
 						var addingisNode = lastSpace.nextSpace[0] >= 3 ? true : false;
@@ -186,10 +191,10 @@
 			}
 		}
 		function checkInside(space, pos){
-			if(space.x > pos.x) return false;
-			if(space.x + space.width < pos.x) return false;
-			if(space.y > pos.y) return false;
-			if(space.y + space.height < pos.y) return false;
+			if(space.x * 10 > pos.x) return false;
+			if(space.x * 10 + space.width * 10 < pos.x) return false;
+			if(space.y * 10 > pos.y) return false;
+			if(space.y * 10 + space.height * 10 < pos.y) return false;
 			return true;
 		}
 	}
@@ -197,6 +202,7 @@
     SpaceGraph.prototype.addRoad = function (road) {
         if (!road)
             return;
+		road.type = "Link"
         this.link.push(road);
     }
 	// i don't know that how much this module effect to loading speed. so we will discuss about it and test it. -> can be done.
@@ -206,80 +212,74 @@
 		var LINK_TO_LINK = 2;
 		var LINK_TO_NODE = 3;
 		var NODE_TO_NODE = 4;
+		
         //node -> (node or link)
 		for(var i=0; i<this.node.length; i++) {
 			for(var j=0; j<this.node.length; j++) {
-				//north or south
-				if((this.node[i].y == (this.node[j].y + this.node[j].height)) || ((this.node[i].y + this.node[i].height) == this.node[j].y)) {
-					//
-					if((this.node[j].x >= this.node[i].x) && (this.node[j].x < (this.node[i].x + this.node[i].width))) {
-						this.node[i].addNextSpace(NODE_TO_NODE, j);
-						this.node[j].addNextSpace(NODE_TO_NODE, i);
-					}
-					else if((this.node[i].x >= this.node[j].x) && (this.node[i].x < (this.node[j].x + this.node[j].width))) {
-						this.node[i].addNextSpace(NODE_TO_NODE, j);
-						this.node[j].addNextSpace(NODE_TO_NODE, i);
-					}
-				}//west or east
-				else if((this.node[i].x == (this.node[j].x + this.node[j].width)) || ((this.node[i].x + this.node[i].width) == this.node[j].x)) {
-					if((this.node[j].y >= this.node[i].y) && (this.node[j].y < (this.node[i].y + this.node[i].height))) {
-						this.node[i].addNextSpace(NODE_TO_NODE, j);
-						this.node[j].addNextSpace(NODE_TO_NODE, i);
-					}
-					else if((this.node[i].y >= this.node[j].y) && (this.node[i].y < (this.node[j].y + this.node[j].height))) {
-						this.node[i].addNextSpace(NODE_TO_NODE, j);
-						this.node[j].addNextSpace(NODE_TO_NODE, i);
-					}
+				//NODE_TO_NODE
+				var dir = isNaver(this.node[i], this.node[j]);
+				if(dir != "none"){
+					this.node[i].nextSpace.push([NODE_TO_NODE, j]);
 				}
+				
 			}
-			for(var k=0; k<this.link.length; k++) {
-				//north or south
-				if((this.node[i].y == (this.link[k].y + 1)) || ((this.node[i].y + this.node[i].height) == this.link[k].y)) {
-					if((this.link[k].x >= this.node[i].x) && (this.link[k].x < (this.node[i].x + this.node[i].width))) { 
-						this.node[i].addNextSpace(NODE_TO_LINK, k);
-						this.link[k].addNextSpace(LINK_TO_NODE, i);
-					}
-				}//west or east
-				else if((this.node[i].x == (this.link[k].x + 1)) || ((this.node[i].x + this.node[i].width) == this.link[k].x)) {
-					if((this.link[k].y >= this.node[i].x) && (this.link[k].y < (this.node[i].x + this.node[i].width))) {
-						this.node[i].addNextSpace(NODE_TO_LINK, k);
-						this.link[k].addNextSpace(LINK_TO_NODE, i);
-					}
+			for(var j=0; j<this.link.length; j++) {
+				//NODE_TO_LINK
+				var dir = isNaver(this.node[i], this.link[j]);
+				if(dir != "none"){
+					this.node[i].nextSpace.push([NODE_TO_LINK, j]);
 				}
 			}
 		}
 		//link -> (node or link)
 		for(var i=0; i<this.link.length; i++) {
 			for(var j=0; j<this.node.length; j++) {
-				//north or south
-				if((this.link[i].y == (this.node[j].y + this.node[j].height)) || ((this.link[i].y + 1) == this.node[j].y)) {
-					if((this.link[i].x >= this.node[j].x) && (this.link[i].x < (this.node[j].x + this.node[j].width))) {
-						this.link[i].addNextSpace(LINK_TO_NODE, j);
-						this.node[j].addNextSpace(NODE_TO_LINK, i);
-					}
-				}//west or east
-				else if((this.link[i].x == (this.node[j].x + this.node[j].width)) || ((this.link[i].x + 1) == this.node[j].x)) {
-					if((this.link[i].y >= this.node[j].y) && (this.link[i].y < (this.node[j].y + this.node[j].width))) {
-						this.link[i].addNextSpace(LINK_TO_NODE, j);
-						this.node[j].addNextSpace(NODE_TO_LINK, i);
-					}
+				//LINK_TO_NODE
+				var dir = isNaver(this.link[i], this.node[j]);
+				if(dir != "none"){
+					this.link[i].nextSpace.push([LINK_TO_NODE, j]);
 				}
 			}
-			for(var k=0; k<this.link.length; k++) {
-				//north or south
-				if((this.link[i].y == (this.link[k].y + 1)) || ((this.link[i].y + 1) == this.link[k].y)) {
-					if(this.link[i].x == this.link[k].x) {
-						this.link[i].addNextSpace(LINK_TO_LINK, k);
-						this.link[k].addNextSpace(LINK_TO_LINK, i);
-					}
-				}//west or east
-				else if((this.link[i].x == (this.link[k].x + 1)) || ((this.link[i].x + 1) == this.link[k].x)) {
-					if(this.link[i].y == this.link[k].y) {
-						this.link[i].addNextSpace(LINK_TO_LINK, k);
-						this.link[k].addNextSpace(LINK_TO_LINK, i);
-					}
+			for(var j=0; j<this.link.length; j++) {
+				//LINK_TO_LINK
+				var dir = isNaver(this.link[i], this.link[j]);
+				if(dir != "none"){
+					this.link[i].nextSpace.push([LINK_TO_LINK, j]);
 				}
 			}
+		}
+		
+		
+		function isOverlap(from1, to1, from2, to2){
+			if(from1 < from2 && from2 < to1) return true;
+			if(from1 < to2 && to2 < to1) return true;
+			
+			if(from2 < from1 && from1 < to2) return true;
+			if(from2 < to1 && to1 < to2) return true;
+			
+			return false;
+		}
+		function isNaver(from, to){
+			if(from.x == to.x + to.width){
+				if(isOverlap(from.y, from.y + from.height, to.y, to.y + to.height)){
+					//left
+					return "left"
+				}
+			} else if(from.x + from.width == to.x){
+				if(isOverlap(from.y, from.y + from.height, to.y, to.y + to.height)){
+					//right
+					return "right"
+				}
+			} else if(from.y == to.y + to.height){
+				if(isOverlap(from.x, from.x + from.width, to.x, to.x + to.width)){
+					return "up"
+				}
+			} else if(from.y + from.height == to.y){
+				if(isOverlap(from.x, from.x + from.width, to.x, to.x + to.width)){
+					return "down"
+				}
+			}
+			return "none";
 		}
     }
 	
