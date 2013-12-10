@@ -1,5 +1,7 @@
 (function(global){
     
+    var ZOMBIE_FEEL_RANGE = 150;
+    
     function Zombie(map) {
         this.ZOMBIE_FEEL = {
             STAND   :   1,
@@ -8,14 +10,12 @@
             ATTACK  :   4
         };
         
-        this.ZOMBIE_FEEL_RANGE = 50;
-        
         var resourceManager = new ResourceManager();
         
         this.model = resourceManager.getModel("Zombie");
 		this.model.castShadow = true;
 		this.model.receiveShadow = true;
-		this.model.position.y = 3;
+		this.model.position.y = 0;
         
         this.map = map;
         
@@ -50,7 +50,7 @@
         var interval = parseInt(Math.sqrt(Math.pow(heroX - this.curX, 2) + Math.pow(heroY - this.curY, 2)));
         
         //if hero is in zombie feeling range, then turn zombie state to chase mode.
-        if(interval < this.ZOMBIE_FEEL_RANGE) {
+        if(interval < ZOMBIE_FEEL_RANGE) {
             this.curState = this.ZOMBIE_FEEL.CHASE;
         }else if(this.curState == this.ZOMBIE_FEEL.STAND) {
             if(Math.floor(Math.random() * 10) < 5){
@@ -114,12 +114,6 @@
     }
     
     Zombie.prototype.action = function (dt, heroX, heroY) {
-        
-        //for Debug
-		//this.chaseHero(dt, heroX, heroY);
-		return;
-        //end
-        
         var zombieAction = this.curState;
         if(zombieAction == this.ZOMBIE_FEEL.MOVE) {
             this.moveAround(dt);
@@ -157,11 +151,12 @@
         return this.oldNodeIndex;
     }
     
-    Zombie.prototype.update = function (dt, heroX, heroY) {
+    Zombie.prototype.update = function (dt, hero) {
+		var pos = hero.getPos();
         //zombie state update
-        this.updateState(heroX, heroY);
+        this.updateState(pos.x, pos.y);
         //move update
-        this.action(dt, heroX, heroY);
+        this.action(dt, pos.x, pos.y);
 		
 		this.model.position.x = this.curX;
 		this.model.position.z = this.curY;

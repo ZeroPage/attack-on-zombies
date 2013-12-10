@@ -26,7 +26,7 @@ AudioContext = window.AudioContext || webkitAudioContext;
 					models : {
 						Hero : "models/player.js",
 						Test : "models/editable-person.js",
-						Zombie : "models/editable-person.js"
+						Zombie : "models/zombie.js"
 					},
 					sounds : {
 						Background : "sound/Background.mp3",
