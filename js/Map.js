@@ -61,7 +61,7 @@
 	
 	
 	Map.prototype.getMonsterPos = function() {
-		var t_space = this.spaceManager.node;
+		var t_space = this.spaceManager.spaceList;
         var index;
         while (true) {
             index = rand(0, t_space.length - 1);
@@ -76,7 +76,7 @@
         return [x, y, index];
 	}
     Map.prototype.getHeroXY = function () {
-        var t_space = this.spaceManager.node;
+        var t_space = this.spaceManager.spaceList;
         while (true) {
             var index = rand(0, t_space.length - 1);
 			var x = parseInt(((2*t_space[index].x) + t_space[index].width) / 2);
@@ -367,9 +367,13 @@
  
                         //then we mark the wall opening with a door
                         this.setCell(newx, newy, MAP_FEATURE.DOOR);
+						var t_door = new Space(newx, newy, 1, 1);
+						this.spaceManager.addRoad(t_door);
  
                         //clean up infront of the door so we can reach it
                         this.setCell((newx+xmod), (newy+ymod), MAP_FEATURE.FLOOR);
+						var t_floor = new Space((newx+xmod), (newy+ymod), 1, 1);
+						this.spaceManager.addRoad(t_door);
                     }
                 }
                 else if (feature >= this.chanceRoom){ //new corridor
@@ -378,6 +382,8 @@
                         currentFeatures++;
  
                         this.setCell(newx, newy, MAP_FEATURE.DOOR);
+						var t_door = new Space(newx, newy, 1, 1);
+						this.spaceManager.addRoad(t_door);
                     }
                 }
             }
@@ -433,13 +439,13 @@
             }
         }
 		
-		for(var i=0; i<this.height; i++) {
+		/*for(var i=0; i<this.height; i++) {
 			for(var j=0; j<this.width; j++) {
 				var temp = this.data[i][j];
 				this.data[i][j] = this.data[j][i];
 				this.data[j][i] = temp;
 			}
-		}
+		}*/
 		
 		//consist of adjacency list
 		this.spaceManager.makeSpaceLinkedList();
