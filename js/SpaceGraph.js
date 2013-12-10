@@ -99,7 +99,7 @@
 				to.x, 
 				to.x + to.width
 			)
-			return {x : x, y : form.y};
+			return {x : x, y : from.y};
 		} else if(from.y + from.height == to.y){
 			//down
 			var x = getMidPoint(
@@ -110,7 +110,7 @@
 			)
 			return {x : x, y : to.y};
 		}
-		
+		throw "not have connect Point";
 		function getMidPoint(a, b, c, d){
 			var tmp =[a,b,c,d].sort(function(a, b){
 				return a-b;
@@ -119,7 +119,7 @@
 		}
 	}
 	SpaceGraph.prototype.getPath = function(curSpaceIndex, curIsNode, pos){
-		var to_index = searchSpace(pos);
+		var to_index = this.searchSpace(pos);
 		 
 		var from = curIsNode ? this.node[curSpaceIndex] : this.link[curSpaceIndex];
 		var to = to_index.isNode ? this.node[to_index.index] : this.link[to_index.index];
@@ -152,7 +152,7 @@
 				if(pathEnd.index == to_index.index) {
 					return path; 
 				} else {
-					var lastSpace = pathEnd.isNode >= 3 ? this.node[pathEnd.index] : this.link[pathEnd.index]];
+					var lastSpace = pathEnd.isNode >= 3 ? this.node[pathEnd.index] : this.link[pathEnd.index];
 					for(var k=0; k<lastSpace.nextSpace.length; k++) {
 						var temp = path;
 						var addingisNode = lastSpace.nextSpace[0] >= 3 ? true : false;
@@ -174,15 +174,23 @@
 	}
 	
 	SpaceGraph.prototype.searchSpace = function (pos) {
+		
 		for(var i=0; i<this.node.length; i++) {
-			if((this.node[i].x =< pos.x && this.node[i].y =< pos.y) && ((this.node[i].x + this.node[i].width) > pos.x && (this.node[i].y + this.node[i].height) =< pos.y)) {
+			if(checkInside(this.node[i], pos)) {
 				return {index : i, isNode : true};	
 			}
 		}
 		for(var i=0; i<this.link.length; i++) {
-			if((this.link[i].x =< pos.x && this.link[i].y =< pos.y) && ((this.link[i].x + this.link[i].width) > pos.x && (this.link[i].y + this.link[i].height) > pos.y)) {
+			if(checkInside(this.link[i], pos)) {
 				return {index : i, isNode : false};
 			}
+		}
+		function checkInside(space, pos){
+			if(space.x > pos.x) return false;
+			if(space.x + space.width < pos.x) return false;
+			if(space.y > pos.y) return false;
+			if(space.y + space.height < pos.y) return false;
+			return true;
 		}
 	}
 

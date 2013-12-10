@@ -58,7 +58,7 @@
    
    	Zombie.prototype.move = function(dt, hero)
 	{
-		if(this.isHeroNearBy())
+		if(this.isHeroNearBy(hero))
 		{
 			var pos = hero.getPos();
 			// 1. reset waypoint
