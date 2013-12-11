@@ -19,6 +19,8 @@ function Game(width, height){
 	that.hero = new Hero(that.camera, this.map);
 	that.hero.addTo(that.scene);
 	that.hero.setPosition(that.map.getHeroXY());
+	
+	window.game = this;
 
 	
 	//temporary setting in zombie create - need to combine stage class or do something.

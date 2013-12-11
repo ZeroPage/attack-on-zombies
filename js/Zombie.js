@@ -58,10 +58,12 @@
 		if(this.isHeroNearBy(hero))
 		{
 			var pos = hero.getPos();
+			
 			// 1. reset waypoint
 			this.wayPoint = [];
 			// 2. hero 위치로 waypoint 설정
 			var spaceList = this.map.spaceManager.getPath(this.currentNode, pos);
+			
 			if( !spaceList) return;
 			if( spaceList.length == 0){
 				this.wayPoint.push({

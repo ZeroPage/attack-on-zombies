@@ -13,7 +13,7 @@ function Bullet(from, to, scene, dt){
 
     var newTo = new THREE.Vector3();
     newTo.x = deltaVec.x * this.speed * dt;
-    newTo.y = deltaVec.y * this.speed * dt;
+    newTo.y = deltaVec.y * this.speed * dt +3;
     newTo.z = deltaVec.z * this.speed * dt;
    
     geometry.vertices.push(new THREE.Vector3(0,0,0));
