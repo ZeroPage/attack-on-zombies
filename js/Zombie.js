@@ -17,6 +17,14 @@
         this.speed = 10;
         
         this.wayPoint = []; // element is point
+		
+		this.animation = new THREE.Animation(
+    		this.model,
+    		'PlayerArmatureAction',
+    		THREE.AnimationHandler.CATMULLROM
+  		);
+		//XXX To test
+		this.animation.play();
         
         //now position info
 		
@@ -24,6 +32,8 @@
 		
         this.curX = -1;
         this.curY = -1;
+		
+		this.isMoving = false;
     }
     
     Zombie.prototype.addTo = function (scene) {
@@ -135,17 +145,31 @@
 			//this.curY = node.y;
 			this.currentNode = node.index;
 		} 
+		
+		this.isMoving = true;
 	}
     
     Zombie.prototype.update = function (dt, hero) {
 		var pos = hero.getPos();
-      
+						
         //move update
 		this.move(dt, hero);
 		
 		//나중에 뺄것같음
 		this.model.position.x = this.curX;
 		this.model.position.z = this.curY;
+		
+		var dx = hero.model.position.x - this.model.position.x;
+		var dz = hero.model.position.z - this.model.position.z;
+
+		this.model.rotation.y = Math.atan(dx/dz);
+		if(dz < 0){
+			this.model.rotation.y += Math.PI;
+		}
+		
+		if(this.isMoving)
+			this.animation.update(dt);
+		this.isMoving = false;
     }
     global.Zombie = Zombie;
 })(this);
