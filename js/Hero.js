@@ -167,11 +167,17 @@
 			//죽었을때 애니메이션
 			//console.log("die");
 			//죽음
-			
+			showGameOver();
 		}
 		else {
 			//맞았을때 애니메이션
 		}
 	}
 	global.Hero = Hero;
+	
+	function showGameOver(){
+		var $img = document.getElementById("gameover");
+		$img.style.opacity = 0.5;
+		console.log("game over");
+	}
 })(this);
