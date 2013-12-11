@@ -25,7 +25,7 @@ function Game(width, height){
 	
 	//temporary setting in zombie create - need to combine stage class or do something.
 	this.zombie = new Array();
-	for(var i = 0; i < 50; i++) {
+	for(var i = 0; i < 50 ; i++) {
 		that.zombie.push(new Zombie(that.map));
 		that.zombie[i].addTo(that.scene);
 		var zombiePos = that.map.getMonsterPos();
@@ -96,14 +96,15 @@ function Game(width, height){
 			that.bullets.push(new Bullet(that.hero.model.position, min.point, that.scene, dt));
 		}
 		that.bulletSound.play();
+		
 	}, true);
 	that.bullets = [];
 		
 	this.clock = new THREE.Clock(true);
 	requestAnimationFrame(function () { that.loop() });
 
-	this.bgm = new SoundEffect("Background", true);	
-	this.bgm.play();
+	this.bgm = new SoundEffect("Background", false);	
+	//this.bgm.play();
 	
 	function mousePos(x, y){
 		var vec = new THREE.Vector3(
@@ -134,15 +135,26 @@ Game.prototype.loop = function(){
 	
 	//temporary setting in zombie AI - need to combine stage class or do something.
 	
+	
 	this.zombie.forEach(function(elem){
-		elem.update(dt, that.hero);
+		elem.update(dt, that.hero, that.zombie);
 	});
 	
+	
 	if(!this.bgm.isPlay){
-		this.bgm.play();
+		//this.bgm.play();
 		this.bgm.loop = true;
 	}
 
+	for(var k = 0; k < this.bullets.length ;k++) {
+		for(var i = 0 ; i < this.zombie.length ; i++) {
+			if(that.bullets[k].hitZombie(this.zombie[i].curX, this.zombie[i].curY, dt)) {
+				this.scene.remove(this.zombie[i].model);
+				this.scene.remove(this.zombie[i]);
+			}
+		}
+	}
+	
 	if(this.hero)
 		this.render(dt);
 
@@ -158,12 +170,12 @@ Game.prototype.move = function (dt) {
 	if(!this.hero)
 		return;
 
-	this.bullets.filter(function(item){
+	this.bullets = this.bullets.filter(function(item){
 		return item.move(dt);
 	});
 	
-	this.zombie.forEach(function(elem){
-		elem.move(dt, that.hero);
+	this.zombie = this.zombie.filter(function(elem){
+		return elem.move(dt, that.hero);
 	});
 	
     if (this.hero.getPos().x < 1) { this.hero.right(dt); }
