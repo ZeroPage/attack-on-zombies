@@ -131,8 +131,8 @@
 		if(delta.x * (this.wayPoint[0].x - this.curX) < 0){
 			//지나감
 			var node = this.wayPoint.shift();
-			this.curX = node.x;
-			this.curY = node.y;
+			//this.curX = node.x;
+			//this.curY = node.y;
 			this.currentNode = node.index;
 		} 
 	}
