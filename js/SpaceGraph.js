@@ -156,9 +156,6 @@
 			if(space.y * 10 + space.height * 10 < pos.y) return false;
 			return true;
 		}
-		
-		
-		
 	}
 
     SpaceGraph.prototype.addRoad = function (road) {

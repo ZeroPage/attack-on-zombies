@@ -141,18 +141,6 @@ Game.prototype.loop = function(){
 		this.bgm.play();
 		this.bgm.loop = true;
 	}
-
-	for(var k = 0; k < this.bullets.length ;k++) {
-		for(var i = 0 ; i < this.zombie.length ; i++) {
-			if(that.bullets[k].hitZombie(this.zombie[i].curX, this.zombie[i].curY, dt)) {
-				
-				this.zombie[i].hp--;
-				
-				if(this.zombie[i].hp <= 0)
-					this.scene.remove(this.zombie[i].model);
-			}
-		}
-	}
 	
 	if(this.hero)
 		this.render(dt);
@@ -171,10 +159,21 @@ Game.prototype.move = function (dt) {
 
 	this.bullets = this.bullets.filter(function(item){
 		return item.move(dt);
+		
 	});
 	
-	this.zombie = this.zombie.filter(function(elem){
-		return elem.move(dt, that.hero);
+	this.zombie = this.zombie.filter(function(zom){
+		zom.move(dt, that.hero);
+		for(var i = 0; i < that.bullets.length ;i++) {
+			if(that.bullets[i].hitZombie(zom.curX, zom.curY, dt)) {	
+				zom.hp--;
+				if(zom.hp <= 0){
+					that.scene.remove(zom.model);
+					return false;
+				}
+			}
+		}
+		return true;
 	});
 	
 	

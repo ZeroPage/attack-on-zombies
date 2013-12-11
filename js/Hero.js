@@ -37,7 +37,7 @@
 		this.camera = camera;
 		this.stat = {};
 		this.stat.speed = 50;
-		this.stat.HP = 3;
+		this.stat.HP = 300;
 		
 		this.gun = new Gun();
 		this.gun.refill(100);
@@ -178,6 +178,7 @@
 	function showGameOver(){
 		var $img = document.getElementById("gameover");
 		$img.style.opacity = 0.5;
+		$img.style.display = "block";
 		console.log("game over");
 	}
 })(this);
