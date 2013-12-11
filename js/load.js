@@ -16,7 +16,8 @@ AudioContext = window.AudioContext || webkitAudioContext;
 			"/js/Gun.js",
 			"/js/Bullet.js",
 			"/js/Zombie.js",
-			"/js/Monster.js"
+			"/js/Monster.js",
+			"/js/SpaceGraph.js"
 		];
 		loadScripts(scripts, onReady);
 
@@ -26,7 +27,7 @@ AudioContext = window.AudioContext || webkitAudioContext;
 					models : {
 						Hero : "models/player.js",
 						Test : "models/editable-person.js",
-						Zombie : "models/editable-person.js"
+						Zombie : "models/zombie.js"
 					},
 					sounds : {
 						Background : "sound/Background.mp3",

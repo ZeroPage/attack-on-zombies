@@ -26,9 +26,6 @@
         //enum//in this time, i just call 1, 2
 		this.hero_node = 0;
 
-        this.xsize = 0;
-        this.ysize = 0;
-
         this.objects = 0;
 
         this.chanceRoom = 75;
@@ -36,204 +33,38 @@
 
         this.width = 50;
         this.height = 50;
-        this.data = new Array();
+        this.data = [];
         for (var i = 0; i < this.height; i++) {
-            this.data[i] = new Array();
+            this.data[i] = [];
             for (var k = 0; k < this.width; k++) {
                 this.data[i][k] = 2;
             }
         }
         this.spaceManager = new SpaceGraph();
-        this.createDungeon(this.width, this.height, 100);
+        this.createDungeon(100);
         //this.random3();
         this.objList = [];
     };
-  
-    function Space(x, y, w, h) {
-        this.x = x;
-        this.y = y;
-        this.width = w;
-        this.height = h;
-        //node -> link [1, link index], link -> link [2, link index], link -> node [3, node index], node -> node [4, node index]
-        this.nextSpace = new Array();
-    };
-    Space.prototype.addNextSpace = function (flag, index) {
-        if (flag > 4)
-            return;
-        this.nextSpace.push([flag, index]);
-    }
 
-    function SpaceGraph() {
-        this.node = new Array(); // space
-        this.link = new Array(); // road
-    };
-
-    SpaceGraph.prototype.addSpace = function (space) {
-        if (!space)
-            return;
-        this.node.push(space);
-    }
-	SpaceGraph.prototype.getNextSpace = function (curIndex, isNode) {
-		var sendIndex, sendX, sendY, sendFlag;
-		var t_space;
-		var count, randNum;
-		
-		// if current space is node, then get randomly next space data.
-		if(isNode) { 
-			count = this.node[curIndex].nextSpace.length - 1  < 0 ? 0 : this.node[curIndex].nextSpace.length;
-			if(count == 0) 
-				return null;
-			randNum = Math.floor(Math.random()*count);
-			sendFlag = this.node[curIndex].nextSpace[randNum][0];
-			sendIndex = this.node[curIndex].nextSpace[randNum][1];
-			if(sendFlag == 1) {
-				t_space = this.link[sendIndex];
-				sendFlag = false;
-			} else if(sendFlag == 4) {
-				t_space = this.node[sendIndex];
-				sendFlag = true;
-			} else {
-				console.log("what the hell in map->getNextSpace");
-			}
-			
-		} else { // if current space if link, then also get randomly next space data.
-			count = this.link[curIndex].nextSpace.length - 1  < 0 ? 0 : this.link[curIndex].nextSpace.length;
-			if(count == 0) 
-				return null;
-			randNum = Math.floor(Math.random()*count);
-			sendFlag = this.link[curIndex].nextSpace[randNum][0];
-			sendIndex = this.link[curIndex].nextSpace[randNum][1];
-			if(sendFlag == 2) {
-				t_space = this.link[sendIndex];
-				sendFlag = false;
-			} else if(sendFlag == 3) {
-				t_space = this.node[sendIndex];
-				sendFlag = true;
-			} else {
-				console.log("what the hell in map->getNextSpace");
-			}
-		}
-		sendX = (t_space.x + t_space.width) * (Math.floor(Math.random() * 5) + 2);
-		sendY = (t_space.y + t_space.height) * (Math.floor(Math.random() * 5) + 2);
-		return [sendX, sendY, sendIndex, sendFlag];
-	}
-
-    SpaceGraph.prototype.addRoad = function (road) {
-        if (!road)
-            return;
-        this.link.push(road);
-    }
-	// i don't know that how much this module effect to loading speed. so we will discuss about it and test it. -> can be done.
-	// i infer about 1000 hundred operation cost.
-	SpaceGraph.prototype.makeSpaceLinkedList = function () {
-		var NODE_TO_LINK = 1;
-		var LINK_TO_LINK = 2;
-		var LINK_TO_NODE = 3;
-		var NODE_TO_NODE = 4;
-        //node -> (node or link)
-		for(var i=0; i<this.node.length; i++) {
-			for(var j=0; j<this.node.length; j++) {
-				//north or south
-				if((this.node[i].y == (this.node[j].y + this.node[j].height)) || ((this.node[i].y + this.node[i].height) == this.node[j].y)) {
-					//
-					if((this.node[j].x >= this.node[i].x) && (this.node[j].x < (this.node[i].x + this.node[i].width))) {
-						this.node[i].addNextSpace(NODE_TO_NODE, j);
-						this.node[j].addNextSpace(NODE_TO_NODE, i);
-					}
-					else if((this.node[i].x >= this.node[j].x) && (this.node[i].x < (this.node[j].x + this.node[j].width))) {
-						this.node[i].addNextSpace(NODE_TO_NODE, j);
-						this.node[j].addNextSpace(NODE_TO_NODE, i);
-					}
-				}//west or east
-				else if((this.node[i].x == (this.node[j].x + this.node[j].width)) || ((this.node[i].x + this.node[i].width) == this.node[j].x)) {
-					if((this.node[j].y >= this.node[i].y) && (this.node[j].y < (this.node[i].y + this.node[i].height))) {
-						this.node[i].addNextSpace(NODE_TO_NODE, j);
-						this.node[j].addNextSpace(NODE_TO_NODE, i);
-					}
-					else if((this.node[i].y >= this.node[j].y) && (this.node[i].y < (this.node[j].y + this.node[j].height))) {
-						this.node[i].addNextSpace(NODE_TO_NODE, j);
-						this.node[j].addNextSpace(NODE_TO_NODE, i);
-					}
-				}
-			}
-			for(var k=0; k<this.link.length; k++) {
-				//north or south
-				if((this.node[i].y == (this.link[k].y + 1)) || ((this.node[i].y + this.node[i].height) == this.link[k].y)) {
-					if((this.link[k].x >= this.node[i].x) && (this.link[k].x < (this.node[i].x + this.node[i].width))) { 
-						this.node[i].addNextSpace(NODE_TO_LINK, k);
-						this.link[k].addNextSpace(LINK_TO_NODE, i);
-					}
-				}//west or east
-				else if((this.node[i].x == (this.link[k].x + 1)) || ((this.node[i].x + this.node[i].width) == this.link[k].x)) {
-					if((this.link[k].y >= this.node[i].x) && (this.link[k].y < (this.node[i].x + this.node[i].width))) {
-						this.node[i].addNextSpace(NODE_TO_LINK, k);
-						this.link[k].addNextSpace(LINK_TO_NODE, i);
-					}
-				}
-			}
-		}
-		//link -> (node or link)
-		for(var i=0; i<this.link.length; i++) {
-			for(var j=0; j<this.node.length; j++) {
-				//north or south
-				if((this.link[i].y == (this.node[j].y + this.node[j].height)) || ((this.link[i].y + 1) == this.node[j].y)) {
-					if((this.link[i].x >= this.node[j].x) && (this.link[i].x < (this.node[j].x + this.node[j].width))) {
-						this.link[i].addNextSpace(LINK_TO_NODE, j);
-						this.node[j].addNextSpace(NODE_TO_LINK, i);
-					}
-				}//west or east
-				else if((this.link[i].x == (this.node[j].x + this.node[j].width)) || ((this.link[i].x + 1) == this.node[j].x)) {
-					if((this.link[i].y >= this.node[j].y) && (this.link[i].y < (this.node[j].y + this.node[j].width))) {
-						this.link[i].addNextSpace(LINK_TO_NODE, j);
-						this.node[j].addNextSpace(NODE_TO_LINK, i);
-					}
-				}
-			}
-			for(var k=0; k<this.link.length; k++) {
-				//north or south
-				if((this.link[i].y == (this.link[k].y + 1)) || ((this.link[i].y + 1) == this.link[k].y)) {
-					if(this.link[i].x == this.link[k].x) {
-						this.link[i].addNextSpace(LINK_TO_LINK, k);
-						this.link[k].addNextSpace(LINK_TO_LINK, i);
-					}
-				}//west or east
-				else if((this.link[i].x == (this.link[k].x + 1)) || ((this.link[i].x + 1) == this.link[k].x)) {
-					if(this.link[i].y == this.link[k].y) {
-						this.link[i].addNextSpace(LINK_TO_LINK, k);
-						this.link[k].addNextSpace(LINK_TO_LINK, i);
-					}
-				}
-			}
-		}
-    }
     
     Map.prototype.setCell = function (x, y, celltype) {
-        if (y < 0 || x < 0 || x > this.xsize || y > this.ysize)
+        if (y < 0 || x < 0 || x > this.width || y > this.height)
             return;
        this.data[y][x] = celltype;
     }
     Map.prototype.getCell = function (x, y) {
-        if (y < 0 || x < 0 || x > this.xsize || y > this.ysize)
+        if (y < 0 || x < 0 || x > this.width || y > this.height)
             return;
-
-        //console.log("path : " + __gDebug__);
-        //console.log(x + " and " + y);
-        //console.log("=" + this.data[y][x]);
-
         return this.data[y][x];
     }
-    Map.prototype.getRand = function (min, max) {
-        var n = max - min;
-        var i = Math.floor(Math.random() * n);
-        if (i < 0)
-            i = -i;
-        return min + i;
-    }
+	
+	
+	
 	Map.prototype.getMonsterPos = function() {
-		var t_space = this.spaceManager.node;
+		var t_space = this.spaceManager.spaceList;
         var index;
         while (true) {
-            index = this.getRand(0, t_space.length - 1);
+            index = rand(0, t_space.length - 1);
 			var x = parseInt(((2*t_space[index].x) + t_space[index].width) / 2);
 			var y = parseInt(((2*t_space[index].y) + t_space[index].height) / 2);
 			if((this.data[x][y] == 1)&&(this.hero_node != index)) {
@@ -245,9 +76,9 @@
         return [x, y, index];
 	}
     Map.prototype.getHeroXY = function () {
-        var t_space = this.spaceManager.node;
+        var t_space = this.spaceManager.spaceList;
         while (true) {
-            var index = this.getRand(0, t_space.length - 1);
+            var index = rand(0, t_space.length - 1);
 			var x = parseInt(((2*t_space[index].x) + t_space[index].width) / 2);
 			var y = parseInt(((2*t_space[index].y) + t_space[index].height) / 2);
             if (this.data[x][y] == 1) {
@@ -258,17 +89,15 @@
         return new Point(x, y);
     }
     Map.prototype.makeCorridor = function (x, y, length, direction) {
-        var len = this.getRand(MAP_SIZE.CORRIDOR_MIN_LENGTH, length);
+        var len = rand(MAP_SIZE.CORRIDOR_MIN_LENGTH, length);
         var floor = MAP_FEATURE.CORRIDOR;
         var dir = 0;
         if (direction > 0 && direction < 4) dir = direction;
 
         var xtemp = 0;
         var ytemp = 0;
-        var xsize = this.xsize - 1;
-        var ysize = this.ysize - 1;
-
-        //__gDebug__ = __gDebug__ + "-> makeCorridor";
+        var xsize = this.width - 1;
+        var ysize = this.height - 1;
 
         switch (dir) {
             case 0:
@@ -338,17 +167,15 @@
     }
     Map.prototype.makeRoom = function (x, y, xlength, ylength, direction) {
         //min lenght is 4 and max is xlength and ylength
-        var xlen = this.getRand(MAP_SIZE.ROOM_MIN_WIDTH, xlength);
-        var ylen = this.getRand(MAP_SIZE.ROOM_MIN_HEIGHT, ylength);
+        var xlen = rand(MAP_SIZE.ROOM_MIN_WIDTH, xlength);
+        var ylen = rand(MAP_SIZE.ROOM_MIN_HEIGHT, ylength);
         var floor = MAP_FEATURE.FLOOR;
         var wall = MAP_FEATURE.WALL;
         var dir = 0;
-        var ysize = this.ysize - 1;
-        var xsize = this.xsize - 1;
+        var ysize = this.height - 1;
+        var xsize = this.width - 1;
         if (direction > 0 && direction < 4) dir = direction;
 
-        //__gDebug__ = __gDebug__ + "-> makeRoom";
- 
         switch(dir){
             case 0:
                 for (var ytemp = y; ytemp > parseInt(y-ylen); ytemp--){
@@ -368,8 +195,6 @@
                         else this.setCell(xtemp, ytemp, floor);
                     }
                 }
-                //Debug
-                //console.log(this.spaceManager.node.length +"-> x : " + (x - parseInt(xlen / 2) + 1) +" y : "+ (parseInt(y - ylen) + 2) +" xlen : "+ (xlen - 2) +" ylen : "+ (ylen - 2));
 				
 				var t_x = x - parseInt(xlen/2) + 1;
 				var t_y = parseInt(y - ylen + 1) + 1;
@@ -396,8 +221,7 @@
                         else this.setCell(xtemp, ytemp, floor);
                     }
                 }
-                //Debug
-                //console.log(this.spaceManager.node.length + "-> x : " + (x + 1) + " y : " + (y - parseInt(ylen/2) + 1) + " xlen : " + (xlen - 2) + " ylen : " + (ylen - 2));
+
 				var t_x = x + 1;
 				var t_y = y - parseInt(ylen/2) + 1;
 				var t_width = parseInt(x+xlen-1) - x - 1;
@@ -423,8 +247,6 @@
                         else this.setCell(xtemp, ytemp, floor);
                     }
                 }
-                //Debug
-                //console.log(this.spaceManager.node.length + "-> x : " + (x - parseInt(xlen/2) + 1) + " y : " + (y + 1) + " xlen : " + (xlen - 2) + " ylen : " + (ylen - 2));
 				var t_x = x - parseInt(xlen / 2) + 1;
 				var t_y = y + 1;
 				var t_width = parseInt((xlen - 1)/2) + parseInt(xlen/2) - 1;
@@ -450,8 +272,7 @@
                         else this.setCell(xtemp, ytemp, floor);
                     }
                 }
-                //Debug
-                //console.log(this.spaceManager.node.length + "-> x : " + (parseInt(x - xlen) + 2) + " y : " + (y - parseInt(ylen / 2) + 1) + " xlen : " + (xlen - 2) + " ylen : " + (ylen - 2));
+                
 				var t_x = parseInt(x-xlen+1) + 1;
 				var t_y = y - parseInt(ylen / 2) + 1;
 				var t_width = x - parseInt(x-xlen+1) - 1;
@@ -463,24 +284,12 @@
         return true;
     }
 
-    Map.prototype.createDungeon = function (inx, iny, inobj) {
-        if (inobj < 1) this.objects = 10;
-        else this.objects = inobj;
- 
-        if (inx < 3) this.xsize = 3;
-        else if (inx > this.width) this.xsize = this.width;
-        else this.xsize = inx;
- 
-        if (iny < 3) this.ysize = 3;
-        else if (iny > this.height) this.ysize = this.height;
-        else this.ysize = iny;
- 
-        var xsize = this.xsize;
-        var ysize = this.ysize;
-
-        //__gDebug__ = "createDungun";
-
-
+    Map.prototype.createDungeon = function (inobj) {
+		this.objects = inobj < 1 ? 10 : inobj;
+        
+        var xsize = this.width;
+        var ysize = this.height;
+		
         for (var y = 0; y < ysize; y++){
             for (var x = 0; x < xsize; x++){
                 if (y == 0) this.setCell(x, y, MAP_FEATURE.WALL);
@@ -490,8 +299,7 @@
                 else this.setCell(x, y, MAP_FEATURE.WALL);
             }
         }
-        this.makeRoom(parseInt(xsize/2), parseInt(ysize/2), MAP_SIZE.ROOM_MAX_WIDTH, MAP_SIZE.ROOM_MIN_HEIGHT, this.getRand(0,3));
-       // __gDebug__ = "createDungun->CenterRoom";
+        this.makeRoom(parseInt(xsize/2), parseInt(ysize/2), MAP_SIZE.ROOM_MAX_WIDTH, MAP_SIZE.ROOM_MIN_HEIGHT, rand(0,3));
 
         var currentFeatures = 1;
  
@@ -500,8 +308,6 @@
                 break;
             }
 
-            //__gDebug__ = "createDungun->CenterRoom->obj:"+currentFeatures+"try:"+countingTries;
-
             var newx = 0;
             var xmod = 0;
             var newy = 0;
@@ -509,8 +315,8 @@
             var validTile = -1;
            
             for (var testing = 0; testing < 1000; testing++){
-                newx = this.getRand(1, xsize-1);
-                newy = this.getRand(1, ysize-1);
+                newx = rand(1, xsize-1);
+                newy = rand(1, ysize-1);
                 validTile = -1;
                 if (this.getCell(newx, newy) == MAP_FEATURE.WALL || this.getCell(newx, newy) == MAP_FEATURE.CORRIDOR){
                     //check if we can reach the place
@@ -554,16 +360,20 @@
             }
             if (validTile > -1){
                 //choose what to build now at our newly found place, and at what direction
-                var feature = this.getRand(0, 100);
+                var feature = rand(0, 100);
                 if (feature <= this.chanceRoom){ //a new room
                     if (this.makeRoom((newx+xmod), (newy+ymod), MAP_SIZE.ROOM_MAX_WIDTH, MAP_SIZE.ROOM_MAX_HEIGHT, validTile)){
                         currentFeatures++; 
  
                         //then we mark the wall opening with a door
                         this.setCell(newx, newy, MAP_FEATURE.DOOR);
+						var t_door = new Space(newx, newy, 1, 1);
+						this.spaceManager.addRoad(t_door);
  
                         //clean up infront of the door so we can reach it
                         this.setCell((newx+xmod), (newy+ymod), MAP_FEATURE.FLOOR);
+						var t_floor = new Space((newx+xmod), (newy+ymod), 1, 1);
+						this.spaceManager.addRoad(t_floor);
                     }
                 }
                 else if (feature >= this.chanceRoom){ //new corridor
@@ -572,13 +382,13 @@
                         currentFeatures++;
  
                         this.setCell(newx, newy, MAP_FEATURE.DOOR);
+						var t_door = new Space(newx, newy, 1, 1);
+						this.spaceManager.addRoad(t_door);
                     }
                 }
             }
         }
-        
-        //__gDebug__ = "createDungun->CenterRoom->otherobject";
-        
+
         //sprinkle out the bonusstuff (stairs, chests etc.) over the map
         var newx = 0;
         var newy = 0;
@@ -586,8 +396,8 @@
         var state = 0; //the state the loop is in, start with the stairs
         while (state != 10){
             for (var testing = 0; testing < 1000; testing++){
-                newx = this.getRand(1, xsize-1);
-                newy = this.getRand(1, ysize-2); 
+                newx = rand(1, xsize-1);
+                newy = rand(1, ysize-2); 
                 ways = 4; //the lower the better
                 if (this.getCell(newx, newy+1) == MAP_FEATURE.FLOOR || this.getCell(newx, newy+1) == MAP_FEATURE.CORRIDOR){
                     //north
@@ -629,118 +439,18 @@
             }
         }
 		
-		for(var i=0; i<this.height; i++) {
+		/*for(var i=0; i<this.height; i++) {
 			for(var j=0; j<this.width; j++) {
 				var temp = this.data[i][j];
 				this.data[i][j] = this.data[j][i];
 				this.data[j][i] = temp;
 			}
-		}
+		}*/
 		
 		//consist of adjacency list
 		this.spaceManager.makeSpaceLinkedList();
         return true;
     }
-
-    
-    SpaceGraph.prototype.getTetrisBlockArray = function (x, width, height) {
-        var blockWidth;
-        if (width - x >= 3) {
-            blockWidth = Math.floor(Math.random() * (width / 10)) + 3;
-        } else {
-            blockWidth = 0;
-        }
-
-        var blockCoordinate = new Array();
-        var limit_Y = parseInt(height / 10);
-        while (true) {
-            if (limit_Y < 3) // exception - infinity loop
-                break;
-            var startY = Math.floor(Math.random() * (height - 1));
-            var endY = Math.floor(Math.random() * (height - 1 - startY)) + startY;
-            if ((endY - startY + 1) >= 3 && (endY - startY + 1) <= limit_Y) {
-                blockCoordinate[0] = startY;
-                blockCoordinate[1] = endY;
-                blockCoordinate[2] = blockWidth;
-                break;
-            }
-        }
-        return blockCoordinate;
-    }
-
-    //administrate two space into the adjList.
-    //arguments(a,b)-> two space node index
-    SpaceGraph.prototype.saveSpaceConnection = function (a, b) {
-        if (!a || !b)
-            return;
-        for (var i = 0; i < this.adjList.length; i++) {
-            if (this.adjList[i][0] == a && this.adjList[i][1] == b) {
-                return;
-            }
-            else if (this.adjList[i][0] == b && this.adjList[i][1] == a) {
-                return;
-            }
-        }
-        var list = [a, b];
-        this.adjList.push(list);
-    }
-	
-/*
-    //random algorithm_third
-    Map.prototype.random3 = function () {
-        var spaceManager = new SpaceGraph();
-
-        // 1. hole create
-        var tx = Math.floor(Math.random() * (this.width - 1));
-        var count = parseInt((this.width * this.height) / 10);
-        var mapSize = parseInt(this.width * this.height);
-        var sumSpaceSize = 0;
-        var tetrisBlockArry;
-        while (count != 0) {
-            tetrisBlockArry = spaceManager.getTetrisBlockArray(tx, this.width, this.height);
-            var t_space;
-            if (tetrisBlockArry.length == 3 && tetrisBlockArry[2] != 0) {
-                var t_space_w = tetrisBlockArry[2] - 2;//each front and back add -1 
-                var t_space_h = tetrisBlockArry[1] - tetrisBlockArry[0] - 1; // endY - startY - 2 + 1(to be length)
-                var t_space_x;
-                var t_space_y = tetrisBlockArry[0] + 1;
-                var t_nowStartX, t_nowEndX;
-                var canNotBeBlock = false;
-                //right side -> left side search for empty space
-                for (t_space_x = this.width - 1; t_space_x >= 0; t_space_x--) {
-                    t_nowStartX = t_space_x - tetrisBlockArry[2] + 1;
-                    t_nowEndX = t_space_x;
-                    for (var i = t_nowEndX; i >= t_nowStartX; i--) {
-                        if (this.data[t_space_y][i] == 1) {
-                            canNotBeBlock = true;
-                        }
-                    }
-                    if (canNotBeBlock) {
-                        canNotBeBlock = false;
-                        continue;
-                    }
-                    t_space_x = t_nowStartX + 1;
-                    t_space = new Space(t_space_x, t_space_y, t_space_w, t_space_h);
-                    sumSpaceSize += tetrisBlockArry[0] * (tetrisBlockArry[2] - tetrisBlockArry[1]);
-                    spaceManager.addSpace(t_space);
-                    break;
-                }
-
-                for (var i = t_space_y; i < t_space_y + t_space_h; i++) {
-                    for (var k = t_space_x; k < t_space_x + t_space_w; k++) {
-                        this.data[i][k] = 1;
-                    }
-                }
-            }
-
-            if (mapSize < sumSpaceSize) {
-                break;
-            }
-            tx = Math.floor(Math.random() * (this.width - 1));
-            count--;
-        }
-    }
-*/
 
 	Map.prototype.addMeshTo = function(scene){
 		for(var i =0; i < this.data.length; i++){
@@ -811,6 +521,14 @@
 		mesh.receiveShadow = true;
 
 		return mesh;
+	}
+
+	function rand(min, max){
+		var n = max - min;
+        var i = Math.floor(Math.random() * n);
+        if (i < 0)
+            i = -i;
+        return min + i;
 	}
 
 	global.Map = Map;
