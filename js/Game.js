@@ -149,8 +149,11 @@ Game.prototype.loop = function(){
 	for(var k = 0; k < this.bullets.length ;k++) {
 		for(var i = 0 ; i < this.zombie.length ; i++) {
 			if(that.bullets[k].hitZombie(this.zombie[i].curX, this.zombie[i].curY, dt)) {
-				this.scene.remove(this.zombie[i].model);
-				this.scene.remove(this.zombie[i]);
+				
+				this.zombie[i].hp--;
+				
+				if(this.zombie[i].hp <= 0)
+					this.scene.remove(this.zombie[i].model);
 			}
 		}
 	}

@@ -13,7 +13,7 @@
         
         this.map = map;
         
-        this.hp = 100;
+        this.hp = 20;
         this.speed = 7;
         
         this.wayPoint = []; // element is point
@@ -215,11 +215,5 @@
 	Zombie.prototype.collisionWall = function (dt) {
 		
 	}
-	
-	//좀비와 좀비 충돌
-	//좀비와 히어로 충돌
-	//좀비와 벽충돌
-	//좀비와 총알 충돌
-	
     global.Zombie = Zombie;
 })(this);
