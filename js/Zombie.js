@@ -14,9 +14,17 @@
         this.map = map;
         
         this.hp = 100;
-        this.speed = 10;
+        this.speed = 7;
         
         this.wayPoint = []; // element is point
+		
+		this.animation = new THREE.Animation(
+    		this.model,
+    		'PlayerArmatureAction',
+    		THREE.AnimationHandler.CATMULLROM
+  		);
+		//XXX To test
+		this.animation.play();
         
         //now position info
 		
@@ -24,6 +32,10 @@
 		
         this.curX = -1;
         this.curY = -1;
+		
+		this.isMoving = false;
+
+		this.delta = new THREE.Vector2();
     }
     
     Zombie.prototype.addTo = function (scene) {
@@ -42,6 +54,14 @@
         this.curY = y;
         this.currentNode = index;
     }
+	
+	Zombie.prototype.setPos = function (x, y) {
+		this.curX = x;
+		this.curY = y;
+	}
+    Zombie.prototype.getPos = function () {
+		return new Point(this.curX, this.curY);
+	}
     
     Zombie.prototype.getCurX = function () {
         return this.curX;
@@ -119,34 +139,87 @@
 		//이동
 		if(this.wayPoint.length == 0) { throw "not the hell"}
 		
-		var delta = new THREE.Vector2();
-		delta.x = this.wayPoint[0].x - this.curX;
-		delta.y = this.wayPoint[0].y - this.curY;
 		
-		delta.normalize();
+		this.delta.x = this.wayPoint[0].x - this.curX;
+		this.delta.y = this.wayPoint[0].y - this.curY;
 		
-		this.curX += delta.x * this.speed * dt;
-		this.curY += delta.y * this.speed * dt;
+		this.delta.normalize();
 		
-		if(delta.x * (this.wayPoint[0].x - this.curX) < 0){
+		this.curX += this.delta.x * this.speed * dt;
+		this.curY += this.delta.y * this.speed * dt;
+		
+		if(this.delta.x * (this.wayPoint[0].x - this.curX) < 0){
 			//지나감
 			var node = this.wayPoint.shift();
 			//this.curX = node.x;
 			//this.curY = node.y;
 			this.currentNode = node.index;
 		} 
+		this.isMoving = true;
 		return true;
 	}
     
-    Zombie.prototype.update = function (dt, hero) {
+    Zombie.prototype.update = function (dt, hero, zombie) {
 		var pos = hero.getPos();
-      
+						
         //move update
 		this.move(dt, hero);
+		this.collisionHero(dt, hero);
+		this.collisionZombie(dt, zombie);
 		
-		//나중에 뺄것같음
 		this.model.position.x = this.curX;
 		this.model.position.z = this.curY;
+		
+		var dx = hero.model.position.x - this.model.position.x;
+		var dz = hero.model.position.z - this.model.position.z;
+
+		this.model.rotation.y = Math.atan(dx/dz);
+		if(dz < 0){
+			this.model.rotation.y += Math.PI;
+		}
+		
+		if(this.isMoving)
+			this.animation.update(dt);
+		this.isMoving = false;
     }
+	
+	Zombie.prototype.collisionHero = function (dt, hero) {
+		var pos = hero.getPos();
+		var interval = parseInt(Math.sqrt(Math.pow(pos.x - this.curX, 2) + Math.pow(pos.y - this.curY, 2)));
+		if(interval < 5) {
+			hero.attackByMonster(1);
+			//좀비 때리는 애니메이션(있다면)
+			//뒤로 살짝 뺀다.
+			this.curX = this.curX - (this.delta.x * this.speed * dt);
+			this.curY = this.curY - (this.delta.y * this.speed * dt);
+		}
+	}
+	
+	Zombie.prototype.collisionZombie = function (dt, zombie) {
+		for(var i=0; i<zombie.length; i++) {
+			var other = zombie[i].getPos();
+			var interval = parseInt(Math.sqrt(Math.pow(other.x - this.curX, 2) + Math.pow(other.y - this.curY, 2)));
+			if(interval < 4) {
+				var direction_To = new THREE.Vector2();
+				direction_To.x = other.x - this.curX;
+				direction_To.y = other.y - this.curY;
+				direction_To.normalize();
+			
+				//zombie[i].setPos(other.x + (direction_To.x * dt * this.speed), other.y + (direction_To.y * dt * this.speed));
+				this.curX = this.curX - (direction_To.x * dt * this.speed);
+				this.curY = this.curY - (direction_To.y * dt * this.speed);
+			}
+		}
+	}
+	
+	Zombie.prototype.collisionWall = function (dt) {
+		
+	}
+	
+	//좀비와 좀비 충돌
+	//좀비와 히어로 충돌
+	//좀비와 벽충돌
+	//좀비와 총알 충돌
+	
     global.Zombie = Zombie;
 })(this);

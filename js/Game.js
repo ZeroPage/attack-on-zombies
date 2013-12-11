@@ -135,9 +135,11 @@ Game.prototype.loop = function(){
 	
 	//temporary setting in zombie AI - need to combine stage class or do something.
 	
+	
 	this.zombie.forEach(function(elem){
-		elem.update(dt, that.hero);
+		elem.update(dt, that.hero, that.zombie);
 	});
+	
 	
 	if(!this.bgm.isPlay){
 		//this.bgm.play();
