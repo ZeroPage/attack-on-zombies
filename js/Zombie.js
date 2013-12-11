@@ -82,7 +82,6 @@
 			
 				for(var i = 0; i < spaceList.length - 1; i++){
 					
-					
 					from = spaceList[i];
 					to = spaceList[i+1];
 					var connectionPoint = this.map.spaceManager.getConnectionPoint(from, to);
