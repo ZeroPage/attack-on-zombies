@@ -1,6 +1,6 @@
 function Bullet(from, to, scene, dt, map){
     var geometry = new THREE.Geometry();
-    this.map = map;
+    
     this.oldX = 0;
     this.oldY = 0;
     var deltaVec = new THREE.Vector3();
@@ -27,7 +27,7 @@ function Bullet(from, to, scene, dt, map){
     });
     
     this.line = new THREE.Line(geometry, meterial);
-    
+    this.map = map;
     this.line.position = from.clone();
     
     scene.add(this.line);
@@ -38,13 +38,19 @@ Bullet.prototype.move = function(dt){
     
     // 벽 충돌 체크할 때 사용하려고 만든 변수들.
     // 일단 좀비와 총알먼저 만들기 위해 잠시 내버려둠.
-    //var x = this.line.position.x;
-    //var y = this.line.position.y;
-    //var z = this.line.position.z;
+    var x = this.line.position.x;
+    var z = this.line.position.z;
     
-    //var nx = parseInt((x + this.deltaVec.x * this.speed * dt) / 10);
-    //var ny = parseInt((y + this.deltaVec.y * this.speed * dt) / 10);
-    //var nz = parseInt((z + this.deltaVec.z * this.speed * dt) / 10);
+    var nx = parseInt((x + this.deltaVec.x * this.speed * dt) / 10);
+    var nz = parseInt((z + this.deltaVec.z * this.speed * dt) / 10);
+    
+    nx = ((nx < this.map.width)? nx:this.map.width);
+    nz = ((nz < this.map.height)? nz:this.map.height);
+    
+    if(this.map.data[nx][nz] == 2) {
+        this.scene.remove(this.line);
+        return false;
+    }
 
     //움직이기
     this.oldX = this.line.position.x;
