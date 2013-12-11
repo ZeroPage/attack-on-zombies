@@ -131,8 +131,8 @@
 				index : spaceArr[2]
 			});
 			this.wayPoint.push({
-				x : spaceArr[0],
-				y : spaceArr[1],
+				x : spaceArr[0] + 5 * Math.random(),
+				y : spaceArr[1] + 5 * Math.random(),
 				index : spaceArr[2]
 			});
 		} 
