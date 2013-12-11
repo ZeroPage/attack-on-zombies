@@ -42,7 +42,6 @@
         }
         this.spaceManager = new SpaceGraph();
         this.createDungeon(100);
-        //this.random3();
         this.objList = [];
     };
 
@@ -50,12 +49,12 @@
     Map.prototype.setCell = function (x, y, celltype) {
         if (y < 0 || x < 0 || x > this.width || y > this.height)
             return;
-       this.data[y][x] = celltype;
+       this.data[x][y] = celltype;
     }
     Map.prototype.getCell = function (x, y) {
         if (y < 0 || x < 0 || x > this.width || y > this.height)
             return;
-        return this.data[y][x];
+        return this.data[x][y];
     }
 	
 	
@@ -292,11 +291,7 @@
 		
         for (var y = 0; y < ysize; y++){
             for (var x = 0; x < xsize; x++){
-                if (y == 0) this.setCell(x, y, MAP_FEATURE.WALL);
-                else if (y == ysize-1) this.setCell(x, y, MAP_FEATURE.WALL);
-                else if (x == 0) this.setCell(x, y, MAP_FEATURE.WALL);
-                else if (x == xsize-1) this.setCell(x, y, MAP_FEATURE.WALL);
-                else this.setCell(x, y, MAP_FEATURE.WALL);
+                this.setCell(x, y, MAP_FEATURE.WALL);
             }
         }
         this.makeRoom(parseInt(xsize/2), parseInt(ysize/2), MAP_SIZE.ROOM_MAX_WIDTH, MAP_SIZE.ROOM_MIN_HEIGHT, rand(0,3));
@@ -419,7 +414,7 @@
                     if (this.getCell(newx+1, newy) != MAP_FEATURE.DOOR)
                         ways--;
                 }
- 
+ 				
                 if (state == 0){
                     if (ways == 0){
                         //state 0, let's place a "upstairs" thing
@@ -436,19 +431,31 @@
                         break;
                     }
                 }
+				
             }
         }
-		
-		/*for(var i=0; i<this.height; i++) {
-			for(var j=0; j<this.width; j++) {
-				var temp = this.data[i][j];
-				this.data[i][j] = this.data[j][i];
-				this.data[j][i] = temp;
-			}
-		}*/
+
 		
 		//consist of adjacency list
 		this.spaceManager.makeSpaceLinkedList();
+		//reset map
+		
+		for(var i = 0; i < this.width; i++){
+			for(var j = 0; j < this.height; j++){
+				this.data[i][j]= MAP_FEATURE.WALL;
+			}
+		}
+		
+		for(var i = 0; i < this.spaceManager.spaceList.length; i++){
+			var space = this.spaceManager.spaceList[i];
+			for(var x = 0; x < space.width; x++){
+				for(var y = 0; y < space.height; y++){
+					this.data[space.x + x][space.y + y] =MAP_FEATURE.FLOOR;
+				}
+			}
+		}
+		
+		console.log("build map")
         return true;
     }
 
@@ -475,6 +482,33 @@
 				}
 			}
 		}
+		
+		//for debug
+		for(var i = 0; i < this.spaceManager.spaceList.length; i++){
+			var space = this.spaceManager.spaceList[i];
+			
+			var geometry = new THREE.Geometry();
+			var vecfrom = new THREE.Vector3();
+			vecfrom.x = (space.x) * 10;
+			vecfrom.y = 10;
+			vecfrom.z = (space.y) * 10;
+			
+			var vecto = new THREE.Vector3();
+			vecto.x = (space.x + space.width) * 10;
+			vecto.y = 10;
+			vecto.z = (space.y + space.height) * 10;
+			
+			geometry.vertices.push(vecfrom);
+			geometry.vertices.push(vecto);
+			
+			var meterial = new THREE.LineBasicMaterial({
+				color : 0xff0000
+			});
+			var line = new THREE.Line(geometry, meterial);
+			scene.add(line);
+		
+		}
+		
 	}
 	
 	var __FLOOR_MAT__;
