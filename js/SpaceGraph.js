@@ -31,7 +31,7 @@
 		
 		if(this.spaceList[curIndex].nextSpace.length == 0) 
 			return null;
-		var randNum = Math.floor(Math.random()*this.spaceList[curIndex].nextSpace.length);
+		var randNum = Math.floor(Math.random()*this.spaceList[curIndex].nextSpace.length+1)-1;
 		sendFlag = this.spaceList[curIndex].nextSpace[randNum][0];
 		sendIndex = this.spaceList[curIndex].nextSpace[randNum][1];
 		

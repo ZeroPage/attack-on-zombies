@@ -373,7 +373,7 @@
                         //clean up infront of the door so we can reach it
                         this.setCell((newx+xmod), (newy+ymod), MAP_FEATURE.FLOOR);
 						var t_floor = new Space((newx+xmod), (newy+ymod), 1, 1);
-						this.spaceManager.addRoad(t_door);
+						this.spaceManager.addRoad(t_floor);
                     }
                 }
                 else if (feature >= this.chanceRoom){ //new corridor
