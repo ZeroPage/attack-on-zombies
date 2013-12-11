@@ -135,6 +135,7 @@
 			//this.curY = node.y;
 			this.currentNode = node.index;
 		} 
+		return true;
 	}
     
     Zombie.prototype.update = function (dt, hero) {

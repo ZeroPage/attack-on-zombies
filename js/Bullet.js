@@ -60,7 +60,7 @@ Bullet.prototype.move = function(dt){
     return true;
 }
 
-Bullet.prototype.hitZombie = function(zom, dt, idx) {
+Bullet.prototype.hitZombie = function(zomX, zomY, dt) {
     // 총알이 이동해온 경로에 대한 직선의 공식 구함.
     // 분모가 되는 x의 뺄셈은 직선이 무조건 이동하므로 0이 될 수 없고, 맵을 벗어나면 소멸되도록 되어있으므로
     // 따로 처리하지 않는다.
@@ -72,15 +72,29 @@ Bullet.prototype.hitZombie = function(zom, dt, idx) {
     c = this.oldY - decline*this.oldX;
 
     // 좀비의 현재 위치 P 에 대하여
-    d = zom.curX;
-    e = zom.curY;
+    d = zomX;
+    e = zomY;
     
     // 직선과 점의 거리 공식 사용.
-    dist = Math.abs((a*d + b*e + c)/Math.sqrt(d*d + e*e));
+    dist = Math.abs((a*d + b*e + c)/Math.sqrt(a*a + b*b));
     // 거리가 좀비 근처인 경우 좀비 사라짐. 또는 좀비 에너지 감소.
-    if(parseInt(dist) < 3) {
-        this.scene.remove(zom);
-        console.log("dist = " + dist);
-        return true;
+    if(parseInt(dist) < 2) {
+        var bulVec = new THREE.Vector2();
+        bulVec.x = this.line.position.x;
+        bulVec.y = this.line.position.z;
+        
+        var zomVec = new THREE.Vector2();
+        zomVec.x = zomX;
+        zomVec.y = zomY;
+        
+        var dv = new THREE.Vector2();
+        dv.x = this.deltaVec.x * this.speed * dt;
+        dv.y = this.deltaVec.z * this.speed * dt;
+        
+        if(dv.dot(zomVec.sub(bulVec))/dv.length() < dv.length()) {
+            console.log("dist = " + dist);
+            return true;
+        }
     }
+    return false;
 }
