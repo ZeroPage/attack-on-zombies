@@ -84,7 +84,7 @@
 			// 2. hero 위치로 waypoint 설정
 			var spaceList = this.map.spaceManager.getPath(this.currentNode, pos);
 			
-			if( !spaceList) return;
+			if( !spaceList) return true;
 			if( spaceList.length == 0){
 				this.wayPoint.push({
 					x : pos.x,

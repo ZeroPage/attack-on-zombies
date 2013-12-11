@@ -178,6 +178,7 @@ Game.prototype.move = function (dt) {
 		return elem.move(dt, that.hero);
 	});
 	
+	
     if (this.hero.getPos().x < 1) { this.hero.right(dt); }
     else if (this.hero.getPos().y < 1) { this.hero.down(dt); }
     else if (this.hero.getPos().x > this.map.width * 10 - 1) { this.hero.left(dt); }

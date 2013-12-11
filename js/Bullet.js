@@ -98,7 +98,6 @@ Bullet.prototype.hitZombie = function(zomX, zomY, dt) {
         dv.y = this.deltaVec.z * this.speed * dt;
         
         if(dv.dot(zomVec.sub(bulVec))/dv.length() < dv.length()) {
-            console.log("dist = " + dist);
             return true;
         }
     }
