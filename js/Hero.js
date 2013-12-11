@@ -131,7 +131,6 @@
 					break;
 				}
 			}
-			
 			if(this.map.data[currentPos.x][currentPos.y] == 2){
 				return currentPos;
 			}

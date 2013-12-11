@@ -148,6 +148,8 @@
 			}
 		}
 		
+		throw "It is not in spaceList"
+		
 		function checkInside(space, pos){
 			if(space.x * 10 > pos.x) return false;
 			if(space.x * 10 + space.width * 10 < pos.x) return false;
@@ -155,6 +157,9 @@
 			if(space.y * 10 + space.height * 10 < pos.y) return false;
 			return true;
 		}
+		
+		
+		
 	}
 
     SpaceGraph.prototype.addRoad = function (road) {
@@ -171,6 +176,7 @@
 				var dir = isNaver(this.spaceList[i], this.spaceList[j]);
 				if(dir != "none"){
 					this.spaceList[i].nextSpace.push([1, j]);
+					//this.spaceList[j].nextSpace.push([1, i]);
 				}
 				
 			}
