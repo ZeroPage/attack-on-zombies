@@ -57,18 +57,19 @@ Bullet.prototype.move = function(dt){
     
     if(this.line.position.x < 0 || this.line.position.x > 510) {this.scene.remove(this.line); return false};
     if(this.line.position.z < 0 || this.line.position.z > 510) {this.scene.remove(this.line); return false};
+    return true;
 }
 
-Bullet.prototype.hitZombie = function(zom, dt) {
+Bullet.prototype.hitZombie = function(zom, dt, idx) {
     // 총알이 이동해온 경로에 대한 직선의 공식 구함.
     // 분모가 되는 x의 뺄셈은 직선이 무조건 이동하므로 0이 될 수 없고, 맵을 벗어나면 소멸되도록 되어있으므로
     // 따로 처리하지 않는다.
-    var decline = (this.line.position.z - oldY) / (this.line.position.x - oldX);
+    var decline = (this.line.position.z - this.oldY) / (this.line.position.x - this.oldX);
     
     // ax + by + c = 0의 형태를 만들기 위해 두 점을 지나는 직선의 공식 사용.
     a = decline;
     b = -1;
-    c = oldY - decline*oldX;
+    c = this.oldY - decline*this.oldX;
 
     // 좀비의 현재 위치 P 에 대하여
     d = zom.curX;
@@ -76,11 +77,10 @@ Bullet.prototype.hitZombie = function(zom, dt) {
     
     // 직선과 점의 거리 공식 사용.
     dist = Math.abs((a*d + b*e + c)/Math.sqrt(d*d + e*e));
-    
     // 거리가 좀비 근처인 경우 좀비 사라짐. 또는 좀비 에너지 감소.
-    if(dist < 100) {
+    if(parseInt(dist) < 3) {
         this.scene.remove(zom);
-        return true;
         console.log("dist = " + dist);
+        return true;
     }
 }

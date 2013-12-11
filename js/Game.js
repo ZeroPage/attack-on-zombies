@@ -23,8 +23,7 @@ function Game(width, height){
 	
 	//temporary setting in zombie create - need to combine stage class or do something.
 	this.zombie = new Array();
-	this.zombieNum = 50;
-	for(var i = 0; i < this.zombieNum; i++) {
+	for(var i = 0; i < 2 ; i++) {
 		that.zombie.push(new Zombie(that.map));
 		that.zombie[i].addTo(that.scene);
 		var zombiePos = that.map.getMonsterPos();
@@ -95,11 +94,11 @@ function Game(width, height){
 			that.bullets.push(new Bullet(that.hero.model.position, min.point, that.scene, dt));
 		}
 		that.bulletSound.play();
-		for(var i = 0 ; i < this.zombieNum ; i++) {
-			if(that.bullets.hitZombie(that.zombie[i],dt)) {
-				this.zombieNum--;
-			}
+		for(var i = 0 ; i < that.zombie.length ; i++) {
+			 that.scene.remove(that.zombie[i]);
+			 that.(that.zombie[i]);
 		}
+		
 	}, true);
 	that.bullets = [];
 		
@@ -147,6 +146,14 @@ Game.prototype.loop = function(){
 		this.bgm.loop = true;
 	}
 
+	for(var k = 0; k < this.bullets.length ;k++) {
+		for(var i = 0 ; i < this.zombie.length ; i++) {
+			if(that.bullets[k].hitZombie(this.zombie[i],dt,k)) {
+
+			}
+		}
+	}
+	
 	if(this.hero)
 		this.render(dt);
 
@@ -162,7 +169,7 @@ Game.prototype.move = function (dt) {
 	if(!this.hero)
 		return;
 
-	this.bullets.filter(function(item){
+	this.bullets = this.bullets.filter(function(item){
 		return item.move(dt);
 	});
 	
