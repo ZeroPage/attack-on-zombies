@@ -25,7 +25,7 @@ function Game(width, height){
 	
 	//temporary setting in zombie create - need to combine stage class or do something.
 	this.zombie = new Array();
-	for(var i = 0; i < 50; i++) {
+	for(var i = 0; i < 70; i++) {
 		that.zombie.push(new Zombie(that.map));
 		that.zombie[i].addTo(that.scene);
 		var zombiePos = that.map.getMonsterPos();
@@ -134,9 +134,11 @@ Game.prototype.loop = function(){
 	
 	//temporary setting in zombie AI - need to combine stage class or do something.
 	
+	
 	this.zombie.forEach(function(elem){
-		elem.update(dt, that.hero);
+		elem.update(dt, that.hero, that.zombie);
 	});
+	
 	
 	if(!this.bgm.isPlay){
 		this.bgm.play();

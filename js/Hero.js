@@ -37,6 +37,7 @@
 		this.camera = camera;
 		this.stat = {};
 		this.stat.speed = 50;
+		this.stat.HP = 3;
 		
 		this.gun = new Gun();
 		this.gun.refill(100);
@@ -159,6 +160,17 @@
 	Hero.prototype.setPosition = function(pos){
 		this.pos = new Point(pos.x * 10 +5, pos.y * 10 + 5);
 		this.update(0);
+	}
+	Hero.prototype.attackByMonster = function(decreasePoint){
+		this.stat.HP -= decreasePoint;
+		if(this.stat.HP <= 0) {
+			//죽었을때 애니메이션
+			//console.log("die");
+			//죽음
+		}
+		else {
+			//맞았을때 애니메이션
+		}
 	}
 	global.Hero = Hero;
 })(this);
