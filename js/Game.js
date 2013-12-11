@@ -142,7 +142,7 @@ Game.prototype.loop = function(){
 	
 	
 	if(!this.bgm.isPlay){
-		//this.bgm.play();
+		this.bgm.play();
 		this.bgm.loop = true;
 	}
 
