@@ -24,7 +24,7 @@
 		//this.modelLight.position.y = 15;
 
 		this.model = resourceManager.getModel("Hero");
-		this.model.position.y = 3;
+		this.model.position.y = 0;
 		
 		this.animation = new THREE.Animation(
     		this.model,

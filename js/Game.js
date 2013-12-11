@@ -130,15 +130,17 @@ function Game(width, height){
 }
 
 Game.prototype.loop = function(){
+	var that = this;
 	var dt = this.clock.getDelta();
 
 	this.keyBinder.check(dt);
 	this.move(dt);
 	
 	//temporary setting in zombie AI - need to combine stage class or do something.
-	for(var count=0; count<50; count++) {
-		this.zombie[count].update(dt, this.hero.getPos().x, this.hero.getPos().y);
-	}
+	
+	this.zombie.forEach(function(elem){
+		elem.update(dt, that.hero);
+	});
 	
 	if(!this.bgm.isPlay){
 		//this.bgm.play();
@@ -156,12 +158,16 @@ Game.prototype.render = function(dt){
 	this.renderer.render(this.scene, this.camera);
 }
 Game.prototype.move = function (dt) {
-
+	var that = this;
 	if(!this.hero)
 		return;
 
 	this.bullets.filter(function(item){
 		return item.move(dt);
+	});
+	
+	this.zombie.forEach(function(elem){
+		elem.move(dt, that.hero);
 	});
 	
     if (this.hero.getPos().x < 1) { this.hero.right(dt); }
