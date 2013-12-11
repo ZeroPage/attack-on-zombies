@@ -20,7 +20,7 @@
 		
 		this.animation = new THREE.Animation(
     		this.model,
-    		'PlayerArmatureAction',
+    		'ZombieArmatureAction',
     		THREE.AnimationHandler.CATMULLROM
   		);
 		//XXX To test
