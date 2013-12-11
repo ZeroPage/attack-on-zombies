@@ -481,34 +481,7 @@
 					scene.add(mesh);
 				}
 			}
-		}
-		
-		//for debug
-		for(var i = 0; i < this.spaceManager.spaceList.length; i++){
-			var space = this.spaceManager.spaceList[i];
-			
-			var geometry = new THREE.Geometry();
-			var vecfrom = new THREE.Vector3();
-			vecfrom.x = (space.x) * 10;
-			vecfrom.y = 10;
-			vecfrom.z = (space.y) * 10;
-			
-			var vecto = new THREE.Vector3();
-			vecto.x = (space.x + space.width) * 10;
-			vecto.y = 10;
-			vecto.z = (space.y + space.height) * 10;
-			
-			geometry.vertices.push(vecfrom);
-			geometry.vertices.push(vecto);
-			
-			var meterial = new THREE.LineBasicMaterial({
-				color : 0xff0000
-			});
-			var line = new THREE.Line(geometry, meterial);
-			scene.add(line);
-		
-		}
-		
+		}	
 	}
 	
 	var __FLOOR_MAT__;

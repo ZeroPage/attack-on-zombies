@@ -147,7 +147,6 @@
 				return i;	
 			}
 		}
-		
 		throw "It is not in spaceList"
 		
 		function checkInside(space, pos){
