@@ -49,6 +49,7 @@ Bullet.prototype.move = function(dt){
     //움직이기
     this.oldX = this.line.position.x;
     this.oldY = this.line.position.z;
+    //console.log("old xy = "+this.oldX + ", "+this.oldY);
     
     this.line.position.x += this.deltaVec.x * this.speed * dt;
     this.line.position.y += this.deltaVec.y * this.speed * dt;
@@ -77,7 +78,7 @@ Bullet.prototype.hitZombie = function(zom, dt) {
     dist = Math.abs((a*d + b*e + c)/Math.sqrt(d*d + e*e));
     
     // 거리가 좀비 근처인 경우 좀비 사라짐. 또는 좀비 에너지 감소.
-    if(dist < 3) {
+    if(dist < 100) {
         this.scene.remove(zom);
         return true;
         console.log("dist = " + dist);

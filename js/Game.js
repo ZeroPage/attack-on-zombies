@@ -167,7 +167,7 @@ Game.prototype.move = function (dt) {
 	});
 	
 	this.zombie.forEach(function(elem){
-		elem.move(dt, that.hero);
+		return elem.move(dt, that.hero);
 	});
 	
     if (this.hero.getPos().x < 1) { this.hero.right(dt); }
