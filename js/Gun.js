@@ -21,6 +21,11 @@
 		this.bulletNum += parseInt(num);
 		this.redraw();
 	}
+	Gun.prototype.set = function(a, b){
+		this.clip = a;
+		this.bulletNum = b;
+		this.redraw();
+	}
 	var $bullet = document.getElementById("bullet");
 	var $bulletNum = document.getElementsByTagName("span");
 	var $bulletType = $bullet.getElementsByTagName("figcaption")[0];

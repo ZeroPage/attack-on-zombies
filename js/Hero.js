@@ -40,8 +40,8 @@
 		this.stat.HP = 300;
 		
 		this.gun = new Gun();
-		this.gun.refill(100);
-		this.gun.reload();
+		this.gun.set(this.stat.HP, 300);
+		//this.gun.reload();
 		
 		this.isMoveing = false;
 	}
@@ -68,6 +68,7 @@
 		//TODO target must move whe player move
 		//this.flashLight.target.position.x = this.pos.x;
 		//this.flashLight.target.position.z = this.pos.y;
+		this.gun.set(this.stat.HP, 300);
 		if(this.isMoveing)
 			this.animation.update(dt * this.stat.speed/10);
 		this.isMoveing = false;
@@ -167,6 +168,7 @@
 			//죽었을때 애니메이션
 			//console.log("die");
 			//죽음
+			this.stat.HP = 0;
 			showGameOver();
 		}
 		else {
