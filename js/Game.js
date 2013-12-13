@@ -176,6 +176,9 @@ Game.prototype.move = function (dt) {
 		return true;
 	});
 	
+	if(this.zombie.length <= 0){
+		showWin();
+	}
 	
     if (this.hero.getPos().x < 1) { this.hero.right(dt); }
     else if (this.hero.getPos().y < 1) { this.hero.down(dt); }
@@ -185,4 +188,11 @@ Game.prototype.move = function (dt) {
 Game.testWebGL = function(){
 	var canvas = document.createElement("canvas");
 	return !!window.WebGLRenderingContext && !!(canvas.getContext("webgl") || canvas.getContext("moz-webgl"));
+}
+
+function showWin(){
+	var $img = document.getElementById("win");
+	$img.style.opacity = 0.5;
+	$img.style.display = "block";
+	//console.log("game over");
 }
